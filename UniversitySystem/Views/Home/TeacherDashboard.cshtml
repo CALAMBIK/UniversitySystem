@@ -1,0 +1,82 @@
+﻿@model UniversitySystem.Models.Teacher
+
+@{
+    ViewData["Title"] = "Личный кабинет преподавателя";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card bg-success text-white mb-4">
+                <div class="card-body">
+                    <h1 class="card-title">Личный кабинет преподавателя</h1>
+                    <p class="card-text">Добро пожаловать, @ViewBag.UserName!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Личная информация</h5>
+                </div>
+                <div class="card-body">
+                    @if (ViewBag.Teacher != null)
+                    {
+                        var teacher = ViewBag.Teacher as UniversitySystem.Models.Teacher;
+                        <p><strong>ФИО:</strong> @teacher.SecondName @teacher.Name @teacher.Patronymic</p>
+                        <p><strong>Кафедра:</strong> @teacher.Departament?.Name</p>
+                        <p><strong>Телефон:</strong> @teacher.PhoneNumber</p>
+                        <p><strong>Логин:</strong> @teacher.Login</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">Мои действия</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="@Url.Action("Index", "Students")" class="btn btn-outline-primary">
+                            Просмотр студентов
+                        </a>
+                        <a href="@Url.Action("Search", "Home")" class="btn btn-outline-success">
+                            Поиск информации
+                        </a>
+                        <a href="@Url.Action("News", "Home")" class="btn btn-outline-info">
+                            Новости вуза
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 mb-4">
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Ближайшие занятия</h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <strong>Информация:</strong> Модуль расписания находится в разработке.
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <strong>Понедельник 10:00</strong> - Программирование (Группа 101)
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Вторник 14:00</strong> - Базы данных (Группа 102)
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

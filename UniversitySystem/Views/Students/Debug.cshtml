@@ -1,0 +1,45 @@
+﻿@model IEnumerable<UniversitySystem.Models.Student>
+
+@{
+    ViewData["Title"] = "Отладка фильтрации";
+}
+
+<h1>Отладка фильтрации</h1>
+
+<div class="alert alert-info">
+    <h4>Статистика базы данных:</h4>
+    <ul>
+        <li>Всего студентов: @ViewBag.StudentsCount</li>
+        <li>Всего групп: @ViewBag.GroupsCount</li>
+        <li>Всего кафедр: @ViewBag.DepartamentsCount</li>
+    </ul>
+</div>
+
+<h3>Студенты с группами и кафедрами:</h3>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>ФИО</th>
+            <th>ID Группы</th>
+            <th>Группа</th>
+            <th>ID Кафедры</th>
+            <th>Кафедра</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var student in Model)
+        {
+            <tr>
+                <td>@student.IdStudent</td>
+                <td>@student.SecondName @student.Name @student.Patronymic</td>
+                <td>@student.IdGroup</td>
+                <td>@(student.Group?.NumberGroup?.ToString() ?? "NULL")</td>
+                <td>@(student.Group?.IdDepartament?.ToString() ?? "NULL")</td>
+                <td>@(student.Group?.Departament?.Name ?? "NULL")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href="@Url.Action("Index")" class="btn btn-primary">Вернуться к фильтрации</a>

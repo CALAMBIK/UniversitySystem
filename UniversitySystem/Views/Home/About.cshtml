@@ -1,0 +1,92 @@
+﻿@{
+    ViewData["Title"] = "О системе";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="text-center mb-5">
+                <h1 class="display-4">О системе</h1>
+                <p class="lead">Учебная система управления ВУЗом</p>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Назначение системы</h4>
+                </div>
+                <div class="card-body">
+                    <p>Учебная система ВУЗа предназначена для автоматизации управления учебным процессом, включая ведение информации о студентах, преподавателях, учебных группах и дисциплинах.</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Управление студентами</h5>
+                            <p class="card-text">Ведение базы данных студентов, их персональной информации и успеваемости</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Управление преподавателями</h5>
+                            <p class="card-text">Учет преподавательского состава и закрепленных дисциплин</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h6 class="card-title">Статистика</h6>
+                            <p class="card-text small">Отслеживание ключевых показателей учебного заведения</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h6 class="card-title">Поиск</h6>
+                            <p class="card-text small">Расширенный поиск и фильтрация данных</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h6 class="card-title">Быстрый доступ</h6>
+                            <p class="card-text small">Удобная навигация по разделам системы</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-info mt-4">
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-3 mb-3">
+                            <span class="badge bg-primary fs-6 p-2">ASP.NET Core</span>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <span class="badge bg-success fs-6 p-2">Entity Framework</span>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <span class="badge bg-warning text-dark fs-6 p-2">SQL Server</span>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <span class="badge bg-info fs-6 p-2">Bootstrap 5</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="@Url.Action("Index", "Home")" class="btn btn-primary">На главную</a>
+            </div>
+        </div>
+    </div>
+</div>

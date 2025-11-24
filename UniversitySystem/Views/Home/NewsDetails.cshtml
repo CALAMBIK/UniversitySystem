@@ -1,0 +1,62 @@
+﻿@model UniversitySystem.Models.News
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <article class="card">
+                <div class="card-header bg-primary text-white">
+                    <h1 class="h3 mb-0">@Model.Title</h1>
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                    {
+                        <img src="@Model.ImageUrl" class="img-fluid rounded mb-4" alt="@Model.Title">
+                    }
+
+                    <div class="news-content">
+                        @Html.Raw(Model.Content.Replace("\n", "<br>"))
+                    </div>
+
+                    <div class="mt-4 pt-3 border-top">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <small class="text-muted">
+                                    <strong>Автор:</strong> @(Model.Author ?? "Администрация вуза")
+                                </small>
+                            </div>
+                            <div class="col-md-6 text-end">
+                                <small class="text-muted">
+                                    <strong>Опубликовано:</strong> @Model.PublishDate?.ToString("dd.MM.yyyy HH:mm")
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <div class="mt-4">
+                <a href="@Url.Action("News")" class="btn btn-outline-primary">
+                    Все новости
+                </a>
+                <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">
+                    На главную
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .news-content {
+        line-height: 1.6;
+        font-size: 1.1em;
+    }
+
+        .news-content br {
+            margin-bottom: 0.5em;
+        }
+</style>

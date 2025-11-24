@@ -1,0 +1,58 @@
+﻿@{
+    ViewData["Title"] = "Вход в систему";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3 class="mb-0">Вход в систему</h3>
+                </div>
+                <div class="card-body">
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger">
+                            @TempData["ErrorMessage"]
+                        </div>
+                    }
+
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success">
+                            @TempData["SuccessMessage"]
+                        </div>
+                    }
+
+                    <form method="post">
+                        <div class="mb-3">
+                            <label for="login" class="form-label">Логин</label>
+                            <input type="text" class="form-control" id="login" name="login" required
+                                   placeholder="Введите ваш логин">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Пароль</label>
+                            <input type="password" class="form-control" id="password" name="password" required
+                                   placeholder="Введите ваш пароль">
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Войти</button>
+                            <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">На главную</a>
+                        </div>
+                    </form>
+
+                    <div class="mt-4">
+                        <h6>Тестовые учетные записи:</h6>
+                        <div class="small">
+                            <strong>Админ:</strong> admin / 123<br>
+                            <strong>Преподаватель:</strong> teacher1 / 123<br>
+                            <strong>Студент:</strong> student1 / 123
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

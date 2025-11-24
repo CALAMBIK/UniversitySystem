@@ -1,0 +1,130 @@
+﻿@model IEnumerable<UniversitySystem.Models.Teacher>
+
+@{
+    ViewData["Title"] = "Список преподавателей";
+}
+
+<h1>Список преподавателей</h1>
+
+<div class="card mb-4">
+    <div class="card-header bg-success text-white">
+        <h5 class="mb-0">Фильтрация и поиск данных</h5>
+    </div>
+    <div class="card-body">
+        <form method="get" asp-action="Index" class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">Поиск по ФИО:</label>
+                <input type="text" name="searchString" class="form-control"
+                       value="@ViewBag.SearchString" placeholder="Введите фамилию, имя...">
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Кафедра:</label>
+                <select name="departamentId" class="form-select">
+                    <option value="">Все кафедры</option>
+                    @foreach (var departament in ViewBag.Departaments)
+                    {
+                        if (ViewBag.SelectedDepartamentId != null && ViewBag.SelectedDepartamentId == departament.IdDepartament)
+                        {
+                            <option value="@departament.IdDepartament" selected>@departament.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@departament.IdDepartament">@departament.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+
+
+            <div class="col-md-4 d-flex align-items-end">
+                <div class="d-grid gap-2 w-100">
+                    <button type="submit" class="btn btn-success">Применить фильтры</button>
+                    <a href="@Url.Action("Index")" class="btn btn-secondary">Сбросить</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Список преподавателей</h5>
+    </div>
+    <div class="card-body">
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>ФИО</th>
+                            <th>Кафедра</th>
+                            <th>Телефон</th>
+                            <th>Логин</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.IdTeacher</td>
+                                <td>
+                                    <strong>@item.SecondName @item.Name @item.Patronymic</strong>
+                                </td>
+                                <td>
+                                    <span class="badge bg-success">
+                                        @if (item.Departament?.Name != null)
+                                        {
+                                            @item.Departament.Name
+                                        }
+                                        else
+                                        {
+                                            @:Не указана
+                                        }
+                                    </span>
+                                </td>
+                                <td>@item.PhoneNumber</td>
+                                <td>
+                                    <code>@item.Login</code>
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("Details", new { id = item.IdTeacher })"
+                                       class="btn btn-info btn-sm" title="Подробнее">
+                                        Подробнее
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-warning text-center">
+                <h5>📭 Преподаватели не найдены</h5>
+                <p>Попробуйте изменить параметры фильтрации</p>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="alert alert-info mt-3">
+    <div class="row">
+        <div class="col-md-6">
+            <strong>Найдено преподавателей:</strong> @Model.Count()
+            @if (ViewBag.SelectedDepartamentId != null || !string.IsNullOrEmpty(ViewBag.SearchString))
+            {
+                <span class="text-success"> (с применением фильтров)</span>
+            }
+        </div>
+        <div class="col-md-6 text-end">
+            <a href="@Url.Action("Index")" class="btn btn-outline-secondary btn-sm">
+                Весь список
+            </a>
+        </div>
+    </div>
+</div>

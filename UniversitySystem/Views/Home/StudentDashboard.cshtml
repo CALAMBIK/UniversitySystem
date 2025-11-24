@@ -1,0 +1,103 @@
+﻿@model UniversitySystem.Models.Student
+
+@{
+    ViewData["Title"] = "Личный кабинет студента";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card bg-info text-white mb-4">
+                <div class="card-body">
+                    <h1 class="card-title">Личный кабинет студента</h1>
+                    <p class="card-text">Добро пожаловать, @ViewBag.UserName!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Учебная информация</h5>
+                </div>
+                <div class="card-body">
+                    @if (ViewBag.Student != null)
+                    {
+                        var student = ViewBag.Student as UniversitySystem.Models.Student;
+                        <p><strong>ФИО:</strong> @student.SecondName @student.Name @student.Patronymic</p>
+                        <p>
+                            <strong>Группа:</strong>
+                            <span class="badge bg-primary">
+                                Группа @student.Group?.NumberGroup
+                            </span>
+                        </p>
+                        <p><strong>Кафедра:</strong> @student.Group?.Departament?.Name</p>
+                        <p><strong>Дата рождения:</strong> @student.DateBirthday?.ToString("dd.MM.yyyy")</p>
+                        <p><strong>Телефон:</strong> @student.PhoneNumber</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Мои действия</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="@Url.Action("Promotions", "Home")" class="btn btn-outline-warning">
+                            Акции и скидки
+                        </a>
+                        <a href="@Url.Action("News", "Home")" class="btn btn-outline-info">
+                            Новости вуза
+                        </a>
+                        <a href="@Url.Action("Search", "Home")" class="btn btn-outline-primary">
+                            Поиск информации
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 mb-4">
+            <div class="card">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">Текущая успеваемость</h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <strong>Информация:</strong> Модуль успеваемости находится в разработке.
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Дисциплина</th>
+                                    <th>Оценка</th>
+                                    <th>Преподаватель</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Программирование</td>
+                                    <td><span class="badge bg-success">5</span></td>
+                                    <td>Смирнов А.В.</td>
+                                </tr>
+                                <tr>
+                                    <td>Базы данных</td>
+                                    <td><span class="badge bg-warning">4</span></td>
+                                    <td>Кузнецова О.П.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

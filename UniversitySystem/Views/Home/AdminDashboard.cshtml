@@ -1,0 +1,104 @@
+﻿@{
+    ViewData["Title"] = "Панель администратора";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card bg-primary text-white mb-4">
+                <div class="card-body">
+                    <h1 class="card-title">Панель администратора</h1>
+                    <p class="card-text">Добро пожаловать, @ViewBag.UserName!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3 mb-4">
+            <div class="card text-white bg-success">
+                <div class="card-body text-center">
+                    <h5>Студенты</h5>
+                    <h3>@ViewBag.StudentsCount</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card text-white bg-info">
+                <div class="card-body text-center">
+                    <h5>Преподаватели</h5>
+                    <h3>@ViewBag.TeacherCount</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card text-white bg-warning">
+                <div class="card-body text-center">
+                    <h5>Группы</h5>
+                    <h3>@ViewBag.GroupsCount</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card text-white bg-danger">
+                <div class="card-body text-center">
+                    <h5>Кафедры</h5>
+                    <h3>@ViewBag.DepartamentsCount</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">⚡ Быстрые действия</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="@Url.Action("Index", "Students")" class="btn btn-outline-primary">
+                            Управление студентами
+                        </a>
+                        <a href="@Url.Action("Index", "Teachers")" class="btn btn-outline-success">
+                            Управление преподавателями
+                        </a>
+                        <a href="@Url.Action("InitializeDatabase", "Home")" class="btn btn-outline-warning"
+                           onclick="return confirm('Пересоздать базу данных? Все данные будут удалены!')">
+                            Пересоздать базу
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Системная информация</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Роль:</strong> Администратор</p>
+                    <p><strong>Полномочия:</strong> Полный доступ ко всем функциям системы</p>
+                    <p><strong>Время входа:</strong> @DateTime.Now.ToString("dd.MM.yyyy HH:mm")</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Активность системы</h5>
+                </div>
+                <div class="card-body">
+                    <p>Система работает стабильно. Все модули активны.</p>
+                    <div class="progress">
+                        <div class="progress-bar bg-success" style="width: 95%">95%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

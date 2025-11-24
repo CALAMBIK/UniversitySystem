@@ -1,0 +1,77 @@
+﻿@model IEnumerable<UniversitySystem.Models.News>
+
+@{
+    ViewData["Title"] = "Новости вуза";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card bg-primary text-white mb-4">
+                <div class="card-body text-center">
+                    <h1 class="display-5">Новости нашего вуза</h1>
+                    <p class="lead">Будьте в курсе последних событий и мероприятий</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="row">
+            @foreach (var news in Model)
+            {
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        @if (!string.IsNullOrEmpty(news.ImageUrl))
+                        {
+                            <img src="@news.ImageUrl" class="card-img-top" alt="@news.Title" style="height: 200px; object-fit: cover;">
+                        }
+                        else
+                        {
+                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                               
+                            </div>
+                        }
+                        <div class="card-body">
+                            <h5 class="card-title">@news.Title</h5>
+                            <p class="card-text">
+                                @if (news.Content.Length > 100)
+                                {
+                                    @news.Content.Substring(0, 100)
+                        
+                                    @:...
+                                }
+                                else
+                                {
+                                    @news.Content
+                                }
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    @news.PublishDate?.ToString("dd.MM.yyyy")
+                                </small>
+                                <a href="@Url.Action("NewsDetails", new { id = news.IdNews })" class="btn btn-sm btn-outline-primary">
+                                    Читать далее
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning text-center">
+            <h4>Новости отсутствуют</h4>
+            <p>В данный момент нет опубликованных новостей</p>
+        </div>
+    }
+
+    <div class="text-center mt-4">
+        <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">
+            На главную
+        </a>
+    </div>
+</div>
