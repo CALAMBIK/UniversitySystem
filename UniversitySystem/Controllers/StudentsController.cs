@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using UniversitySystem.Data;
 using UniversitySystem.Models;
 using System.Linq;
 using System.Threading.Tasks;
@@ -82,6 +83,21 @@ namespace UniversitySystem.Controllers
         public IActionResult Search(int? groupId, int? departamentId, string searchString)
         {
             return RedirectToAction("Index", new { groupId, departamentId, searchString });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetGroups()
+        {
+            var groups = await _context.StudentGroups
+                .Include(g => g.Departament)
+                .Select(g => new {
+                    g.IdGroup,
+                    g.NumberGroup,
+                    DepartamentName = g.Departament.Name
+                })
+                .OrderBy(g => g.NumberGroup)
+                .ToListAsync();
+            return Json(groups);
         }
 
         public async Task<IActionResult> Debug()

@@ -1,5 +1,6 @@
 ﻿using UniversitySystem.Models;
 using Microsoft.EntityFrameworkCore;
+using UniversitySystem.Data;
 
 namespace UniversitySystem.Services
 {

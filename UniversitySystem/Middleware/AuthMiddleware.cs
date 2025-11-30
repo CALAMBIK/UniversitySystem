@@ -20,6 +20,7 @@ namespace UniversitySystem.Middleware
             {
                 "/Account/Login",
                 "/Home/Login",
+                "/Account/Register",
                 "/Home/Index",
                 "/Home/About",
                 "/Home/Contact",

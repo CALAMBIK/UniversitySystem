@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using UniversitySystem.Models;
 using System.Linq;
 using System.Threading.Tasks;
+using UniversitySystem.Data;
 
 namespace UniversitySystem.Controllers
 {
@@ -73,6 +74,19 @@ namespace UniversitySystem.Controllers
         public IActionResult Search(int? departamentId, string searchString)
         {
             return RedirectToAction("Index", new { departamentId, searchString });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetDepartaments()
+        {
+            var departaments = await _context.Departaments
+                .Select(d => new {
+                    d.IdDepartament,
+                    d.Name
+                })
+                .OrderBy(d => d.Name)
+                .ToListAsync();
+            return Json(departaments);
         }
     }
 }

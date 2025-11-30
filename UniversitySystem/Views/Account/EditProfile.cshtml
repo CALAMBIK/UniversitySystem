@@ -1,0 +1,253 @@
+﻿@model UniversitySystem.Models.UserProfile
+@{
+    ViewData["Title"] = "Редактирование профиля";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">
+                        <i class="fas fa-user-edit"></i> Редактирование профиля
+                    </h3>
+                </div>
+                <div class="card-body">
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger">
+                            @TempData["ErrorMessage"]
+                        </div>
+                    }
+
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success">
+                            @TempData["SuccessMessage"]
+                        </div>
+                    }
+
+                    <form method="post">
+                        @Html.AntiForgeryToken()
+
+                        <!-- Основная информация -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary">
+                                    <i class="fas fa-id-card"></i> Основная информация
+                                </h5>
+                                <hr>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            @if (ViewBag.UserRole == "Student" && ViewBag.User?.Student != null)
+                            {
+                                var student = ViewBag.User.Student as UniversitySystem.Models.Student;
+                                <div class="col-md-6 mb-3">
+                                    <label for="secondName" class="form-label">Фамилия *</label>
+                                    <input type="text" class="form-control" id="secondName" name="secondName"
+                                           value="@student.SecondName" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="name" class="form-label">Имя *</label>
+                                    <input type="text" class="form-control" id="name" name="name"
+                                           value="@student.Name" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="patronymic" class="form-label">Отчество</label>
+                                    <input type="text" class="form-control" id="patronymic" name="patronymic"
+                                           value="@student.Patronymic">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="phoneNumber" class="form-label">Телефон</label>
+                                    <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber"
+                                           value="@student.PhoneNumber">
+                                </div>
+                            }
+                            else if (ViewBag.UserRole == "Teacher" && ViewBag.User?.Teacher != null)
+                            {
+                                var teacher = ViewBag.User.Teacher as UniversitySystem.Models.Teacher;
+                                <div class="col-md-6 mb-3">
+                                    <label for="secondName" class="form-label">Фамилия *</label>
+                                    <input type="text" class="form-control" id="secondName" name="secondName"
+                                           value="@teacher.SecondName" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="name" class="form-label">Имя *</label>
+                                    <input type="text" class="form-control" id="name" name="name"
+                                           value="@teacher.Name" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="patronymic" class="form-label">Отчество</label>
+                                    <input type="text" class="form-control" id="patronymic" name="patronymic"
+                                           value="@teacher.Patronymic">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="phoneNumber" class="form-label">Телефон</label>
+                                    <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber"
+                                           value="@teacher.PhoneNumber">
+                                </div>
+                            }
+                            else if (ViewBag.UserRole == "Admin")
+                            {
+                                <div class="col-12 mb-3">
+                                    <div class="alert alert-info">
+                                        <strong>Информация:</strong> Для администраторов доступно только редактирование контактной информации.
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Контактная информация -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary">
+                                    <i class="fas fa-envelope"></i> Контактная информация
+                                </h5>
+                                <hr>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Email" class="form-label">Email</label>
+                                <input asp-for="Email" class="form-control" type="email"
+                                       placeholder="Введите ваш email">
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Phone" class="form-label">Дополнительный телефон</label>
+                                <input asp-for="Phone" class="form-control"
+                                       placeholder="Введите дополнительный телефон">
+                                <span asp-validation-for="Phone" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <label asp-for="Address" class="form-label">Адрес</label>
+                                <input asp-for="Address" class="form-control"
+                                       placeholder="Введите ваш адрес">
+                                <span asp-validation-for="Address" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Дополнительная информация -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary">
+                                    <i class="fas fa-info-circle"></i> Дополнительная информация
+                                </h5>
+                                <hr>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="BirthDate" class="form-label">Дата рождения</label>
+                                <input asp-for="BirthDate" class="form-control" type="date">
+                                <span asp-validation-for="BirthDate" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="AvatarUrl" class="form-label">Ссылка на аватар</label>
+                                <input asp-for="AvatarUrl" class="form-control"
+                                       placeholder="https://example.com/avatar.jpg">
+                                <span asp-validation-for="AvatarUrl" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <label asp-for="About" class="form-label">О себе</label>
+                                <textarea asp-for="About" class="form-control" rows="4"
+                                          placeholder="Расскажите немного о себе..."></textarea>
+                                <span asp-validation-for="About" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Кнопки -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    <a href="@Url.Action("Profile", "Account")" class="btn btn-secondary me-md-2">
+                                        <i class="fas fa-arrow-left"></i> Назад к профилю
+                                    </a>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save"></i> Сохранить изменения
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Быстрые действия -->
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-warning text-dark">
+                            <h6 class="mb-0"><i class="fas fa-key"></i> Безопасность</h6>
+                        </div>
+                        <div class="card-body">
+                            <a href="@Url.Action("ChangePassword", "Account")" class="btn btn-outline-warning btn-sm">
+                                <i class="fas fa-lock"></i> Сменить пароль
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <h6 class="mb-0"><i class="fas fa-user-circle"></i> Профиль</h6>
+                        </div>
+                        <div class="card-body">
+                            <a href="@Url.Action("Profile", "Account")" class="btn btn-outline-info btn-sm">
+                                <i class="fas fa-eye"></i> Просмотр профиля
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Автоматическое скрытие сообщений через 5 секунд
+        setTimeout(function() {
+            $('.alert').fadeOut('slow');
+        }, 5000);
+
+        // Валидация формы
+        $(document).ready(function() {
+            $('form').on('submit', function(e) {
+                let isValid = true;
+
+                // Проверка обязательных полей
+                $('input[required]').each(function() {
+                    if ($(this).val().trim() === '') {
+                        $(this).addClass('is-invalid');
+                        isValid = false;
+                    } else {
+                        $(this).removeClass('is-invalid');
+                    }
+                });
+
+                if (!isValid) {
+                    e.preventDefault();
+                    alert('Пожалуйста, заполните все обязательные поля (отмечены *).');
+                }
+            });
+
+            // Убираем класс ошибки при вводе
+            $('input[required]').on('input', function() {
+                if ($(this).val().trim() !== '') {
+                    $(this).removeClass('is-invalid');
+                }
+            });
+        });
+    </script>
+}

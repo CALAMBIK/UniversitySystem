@@ -1,0 +1,54 @@
+﻿@{
+    ViewData["Title"] = "Удаление аккаунта";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h3 class="mb-0">
+                        <i class="fas fa-exclamation-triangle"></i> Удаление аккаунта
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-danger">
+                        <h5 class="alert-heading">Внимание!</h5>
+                        <p>Это действие невозможно отменить. Все ваши данные будут безвозвратно удалены:</p>
+                        <ul>
+                            <li>Личный профиль</li>
+                            <li>История запросов материалов</li>
+                            <li>Все связанные данные</li>
+                        </ul>
+                    </div>
+
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger">
+                            @TempData["ErrorMessage"]
+                        </div>
+                    }
+
+                    <form method="post">
+                        @Html.AntiForgeryToken()
+
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Для подтверждения введите ваш пароль *</label>
+                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger"
+                                    onclick="return confirm('Вы уверены, что хотите удалить свой аккаунт? Это действие невозможно отменить!')">
+                                <i class="fas fa-trash"></i> Удалить аккаунт
+                            </button>
+                            <a href="@Url.Action("Profile", "Account")" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left"></i> Отмена
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

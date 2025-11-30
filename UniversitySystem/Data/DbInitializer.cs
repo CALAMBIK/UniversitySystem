@@ -162,6 +162,62 @@ namespace UniversitySystem.Data
 
                 Console.WriteLine("🎉 База данных успешно инициализирована!");
                 Console.WriteLine($"📊 ИТОГО: {departaments.Length} кафедр, {groups.Length} групп, {students.Count} студентов, {teachers.Count} преподавателей, {disciplines.Length} дисциплин, {users.Count} пользователей, {news.Count} новостей, {promotions.Count} акций");
+
+                // ========== Профили пользователей ==========
+                var userProfiles = new List<UserProfile>();
+                foreach (var user in users)
+                {
+                    userProfiles.Add(new UserProfile
+                    {
+                        IdUser = user.IdUser,
+                        Email = $"{user.Login}@university.ru",
+                        Phone = "+7999" + rand.Next(1000000, 9999999),
+                        UpdatedDate = DateTime.Now
+                    });
+                }
+                context.UserProfiles.AddRange(userProfiles);
+                context.SaveChanges();
+                Console.WriteLine($"✅ Добавлено профилей: {userProfiles.Count}");
+
+                var materialRequests = new List<MaterialRequest>
+                {
+                    new MaterialRequest {
+                        IdUser = users.First(u => u.Login == "student1").IdUser,
+                        Title = "Учебник по программированию",
+                        Description = "Нужен учебник 'Программирование на C# для начинающих'",
+                        MaterialType = "Учебник",
+                        Status = "Completed",
+                        CreatedDate = DateTime.Now.AddDays(-10),
+                        ProcessedDate = DateTime.Now.AddDays(-8),
+                        CompletedDate = DateTime.Now.AddDays(-5),
+                        AdminComment = "Учебник выдан в библиотеке"
+                    },
+
+                    new MaterialRequest {
+                        IdUser = users.First(u => u.Login == "teacher1").IdUser,
+                        Title = "Методическое пособие",
+                        Description = "Требуется пособие для проведения практических занятий",
+                        MaterialType = "Пособие",
+                        Status = "Approved",
+                        CreatedDate = DateTime.Now.AddDays(-3),
+                        ProcessedDate = DateTime.Now.AddDays(-1)
+                    },
+
+                    new MaterialRequest {
+                        IdUser = users.First(u => u.Login == "student2").IdUser,
+                        Title = "Научные статьи",
+                        Description = "Подборка статей по искусственному интеллекту",
+                        MaterialType = "Статья",
+                        Status = "Pending",
+                        CreatedDate = DateTime.Now.AddDays(-1)
+                    }
+                };
+
+                context.MaterialRequests.AddRange(materialRequests);
+                context.SaveChanges();
+                Console.WriteLine($"✅ Добавлено запросов: {materialRequests.Count}");
+
+
             }
             catch (Exception ex)
             {

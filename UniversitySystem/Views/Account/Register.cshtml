@@ -1,0 +1,318 @@
+﻿@{
+    ViewData["Title"] = "Регистрация";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white text-center">
+                    <h3 class="mb-0"><i class="fas fa-user-plus"></i> Регистрация в системе</h3>
+                </div>
+                <div class="card-body">
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger">
+                            @TempData["ErrorMessage"]
+                        </div>
+                    }
+
+                    <form method="post">
+                        <!-- Личные данные -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary">
+                                    <i class="fas fa-id-card"></i> Личные данные
+                                </h5>
+                                <hr>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="secondName" class="form-label">Фамилия *</label>
+                                <input type="text" class="form-control" id="secondName" name="secondName" required
+                                       placeholder="Иванов">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="name" class="form-label">Имя *</label>
+                                <input type="text" class="form-control" id="name" name="name" required
+                                       placeholder="Иван">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="patronymic" class="form-label">Отчество</label>
+                                <input type="text" class="form-control" id="patronymic" name="patronymic"
+                                       placeholder="Иванович">
+                            </div>
+                        </div>
+
+                        <!-- Контактная информация -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary">
+                                    <i class="fas fa-address-book"></i> Контактная информация
+                                </h5>
+                                <hr>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email *</label>
+                                <input type="email" class="form-control" id="email" name="email" required
+                                       placeholder="ivanov@example.com">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="phone" class="form-label">Телефон *</label>
+                                <input type="tel" class="form-control" id="phone" name="phone" required
+                                       placeholder="+79991234567">
+                            </div>
+                        </div>
+
+                        <!-- Учетные данные -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary">
+                                    <i class="fas fa-key"></i> Учетные данные
+                                </h5>
+                                <hr>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="login" class="form-label">Логин *</label>
+                                <input type="text" class="form-control" id="login" name="login" required
+                                       placeholder="Придумайте логин">
+                                <div class="form-text">Логин должен быть уникальным</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="role" class="form-label">Роль *</label>
+                                <select class="form-control" id="role" name="role" required>
+                                    <option value="">Выберите роль</option>
+                                    <option value="Student">Студент</option>
+                                    <option value="Teacher">Преподаватель</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="password" class="form-label">Пароль *</label>
+                                <input type="password" class="form-control" id="password" name="password" required
+                                       placeholder="Придумайте пароль">
+                                <div class="form-text">Минимум 6 символов</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="confirmPassword" class="form-label">Подтверждение пароля *</label>
+                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required
+                                       placeholder="Повторите пароль">
+                            </div>
+                        </div>
+
+                        <!-- Дополнительная информация для студентов -->
+                        <div id="studentFields" style="display: none;">
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <h5 class="text-info">
+                                        <i class="fas fa-graduation-cap"></i> Информация для студентов
+                                    </h5>
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="groupId" class="form-label">Группа</label>
+                                    <select class="form-control" id="groupId" name="groupId">
+                                        <option value="">Выберите группу (опционально)</option>
+                                        <!-- Группы будут заполнены через JavaScript -->
+                                    </select>
+                                    <div class="form-text">Можно выбрать позже в личном кабинете</div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="dateBirthday" class="form-label">Дата рождения</label>
+                                    <input type="date" class="form-control" id="dateBirthday" name="dateBirthday">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Дополнительная информация для преподавателей -->
+                        <div id="teacherFields" style="display: none;">
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <h5 class="text-warning">
+                                        <i class="fas fa-chalkboard-teacher"></i> Информация для преподавателей
+                                    </h5>
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="departamentId" class="form-label">Кафедра</label>
+                                    <select class="form-control" id="departamentId" name="departamentId">
+                                        <option value="">Выберите кафедру (опционально)</option>
+                                        <!-- Кафедры будут заполнены через JavaScript -->
+                                    </select>
+                                    <div class="form-text">Можно выбрать позже в личном кабинете</div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="academicDegree" class="form-label">Ученая степень</label>
+                                    <input type="text" class="form-control" id="academicDegree" name="academicDegree"
+                                           placeholder="Кандидат наук, Доцент и т.д.">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-user-plus"></i> Зарегистрироваться
+                            </button>
+                            <a href="@Url.Action("Login", "Account")" class="btn btn-outline-secondary">
+                                <i class="fas fa-sign-in-alt"></i> Уже есть аккаунт? Войти
+                            </a>
+                        </div>
+                    </form>
+
+                    <div class="mt-4">
+                        <div class="alert alert-info">
+                            <h6><i class="fas fa-info-circle"></i> Информация о регистрации:</h6>
+                            <ul class="mb-0 small">
+                                <li>Все поля, отмеченные *, обязательны для заполнения</li>
+                                <li>После регистрации вы автоматически войдете в систему</li>
+                                <li>Вы сможете дополнить информацию в личном кабинете</li>
+                                <li>Группу и кафедру можно будет выбрать позже</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Списки групп и кафедр из вашей базы данных
+            const groups = [
+                { idGroup: 1, numberGroup: 101, departamentName: "Информатика и ВТ" },
+                { idGroup: 2, numberGroup: 102, departamentName: "Информатика и ВТ" },
+                { idGroup: 3, numberGroup: 201, departamentName: "Прикладная математика" },
+                { idGroup: 4, numberGroup: 202, departamentName: "Прикладная математика" },
+                { idGroup: 5, numberGroup: 301, departamentName: "Общая физика" },
+                { idGroup: 6, numberGroup: 302, departamentName: "Общая физика" },
+                { idGroup: 7, numberGroup: 401, departamentName: "Высшая математика" },
+                { idGroup: 8, numberGroup: 501, departamentName: "Экономика" },
+                { idGroup: 9, numberGroup: 601, departamentName: "Социология" },
+                { idGroup: 10, numberGroup: 701, departamentName: "Иностранные языки" }
+            ];
+
+            const departaments = [
+                { idDepartament: 1, name: "Информатика и ВТ" },
+                { idDepartament: 2, name: "Прикладная математика" },
+                { idDepartament: 3, name: "Общая физика" },
+                { idDepartament: 4, name: "Высшая математика" },
+                { idDepartament: 5, name: "Экономика" },
+                { idDepartament: 6, name: "Социология" },
+                { idDepartament: 7, name: "Иностранные языки" }
+            ];
+
+            // Показ/скрытие дополнительных полей в зависимости от роли
+            $('#role').change(function() {
+                const role = $(this).val();
+                $('#studentFields').hide();
+                $('#teacherFields').hide();
+
+                if (role === 'Student') {
+                    $('#studentFields').show();
+                    loadGroups();
+                } else if (role === 'Teacher') {
+                    $('#teacherFields').show();
+                    loadDepartaments();
+                }
+            });
+
+            // Загрузка групп для студентов
+            function loadGroups() {
+                const groupSelect = $('#groupId');
+                groupSelect.empty();
+                groupSelect.append('<option value="">Выберите группу (опционально)</option>');
+
+                groups.forEach(function(group) {
+                    groupSelect.append(`<option value="${group.idGroup}">Группа ${group.numberGroup} (${group.departamentName})</option>`);
+                });
+            }
+
+            // Загрузка кафедр для преподавателей
+            function loadDepartaments() {
+                const departamentSelect = $('#departamentId');
+                departamentSelect.empty();
+                departamentSelect.append('<option value="">Выберите кафедру (опционально)</option>');
+
+                departaments.forEach(function(departament) {
+                    departamentSelect.append(`<option value="${departament.idDepartament}">${departament.name}</option>`);
+                });
+            }
+
+            // Валидация пароля
+            $('#password').on('input', function() {
+                if ($(this).val().length < 6) {
+                    $(this).addClass('is-invalid');
+                } else {
+                    $(this).removeClass('is-invalid');
+                }
+            });
+
+            // Проверка совпадения паролей
+            $('#confirmPassword').on('input', function() {
+                if ($(this).val() !== $('#password').val()) {
+                    $(this).addClass('is-invalid');
+                } else {
+                    $(this).removeClass('is-invalid');
+                }
+            });
+
+            // Валидация формы
+            $('form').on('submit', function(e) {
+                let isValid = true;
+
+                // Проверка обязательных полей
+                $('input[required], select[required]').each(function() {
+                    if ($(this).val().trim() === '') {
+                        $(this).addClass('is-invalid');
+                        isValid = false;
+                    } else {
+                        $(this).removeClass('is-invalid');
+                    }
+                });
+
+                // Проверка длины пароля
+                if ($('#password').val().length < 6) {
+                    $('#password').addClass('is-invalid');
+                    isValid = false;
+                }
+
+                // Проверка совпадения паролей
+                if ($('#password').val() !== $('#confirmPassword').val()) {
+                    $('#confirmPassword').addClass('is-invalid');
+                    isValid = false;
+                }
+
+                if (!isValid) {
+                    e.preventDefault();
+                    alert('Пожалуйста, заполните все обязательные поля и исправьте ошибки.');
+                }
+            });
+
+            // Убираем ошибки при вводе
+            $('input, select').on('input change', function() {
+                $(this).removeClass('is-invalid');
+            });
+
+            // Автоматическое скрытие сообщений
+            setTimeout(function() {
+                $('.alert').fadeOut('slow');
+            }, 5000);
+        });
+    </script>
+}

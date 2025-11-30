@@ -1,0 +1,191 @@
+﻿@model UniversitySystem.Models.MaterialRequest
+@{
+    ViewData["Title"] = "Создание запроса на учебные материалы";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h3 class="mb-0">
+                        <i class="fas fa-plus-circle"></i> Новый запрос на учебные материалы
+                    </h3>
+                </div>
+                <div class="card-body">
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger">
+                            @TempData["ErrorMessage"]
+                        </div>
+                    }
+
+                    <form method="post">
+                        @Html.AntiForgeryToken()
+
+                        <!-- Основная информация -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary">
+                                    <i class="fas fa-info-circle"></i> Основная информация
+                                </h5>
+                                <hr>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <label asp-for="Title" class="form-label">Название материала *</label>
+                                <input asp-for="Title" class="form-control"
+                                       placeholder="Например: Учебник по программированию на C#" required>
+                                <span asp-validation-for="Title" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <label asp-for="Description" class="form-label">Описание *</label>
+                                <textarea asp-for="Description" class="form-control" rows="5"
+                                          placeholder="Подробно опишите, какой материал вам нужен, для каких целей, автор, год издания и т.д." required></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="MaterialType" class="form-label">Тип материала *</label>
+                                <select asp-for="MaterialType" class="form-control" required>
+                                    <option value="">Выберите тип материала</option>
+                                    <option value="Учебник">Учебник</option>
+                                    <option value="Пособие">Учебное пособие</option>
+                                    <option value="Статья">Научная статья</option>
+                                    <option value="Презентация">Презентация</option>
+                                    <option value="Лабораторная работа">Лабораторная работа</option>
+                                    <option value="Методические указания">Методические указания</option>
+                                    <option value="Практикум">Практикум</option>
+                                    <option value="Другое">Другое</option>
+                                </select>
+                                <span asp-validation-for="MaterialType" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Приоритет</label>
+                                <select class="form-control" disabled>
+                                    <option>Стандартный</option>
+                                </select>
+                                <small class="form-text text-muted">Все запросы обрабатываются в порядке поступления</small>
+                            </div>
+                        </div>
+
+                        <!-- Дополнительная информация -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary">
+                                    <i class="fas fa-paperclip"></i> Дополнительная информация
+                                </h5>
+                                <hr>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <label asp-for="FileUrl" class="form-label">Ссылка на файл (если есть)</label>
+                                <input asp-for="FileUrl" class="form-control"
+                                       placeholder="https://example.com/document.pdf">
+                                <span asp-validation-for="FileUrl" class="text-danger"></span>
+                                <small class="form-text text-muted">Если у вас уже есть электронная версия материала, укажите ссылку на него</small>
+                            </div>
+                        </div>
+
+                        <!-- Информация о процессе -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="alert alert-info">
+                                    <h6 class="alert-heading">
+                                        <i class="fas fa-info-circle"></i> Как работает процесс обработки запросов:
+                                    </h6>
+                                    <ul class="mb-0">
+                                        <li><strong>На рассмотрении</strong> - запрос отправлен и ожидает обработки</li>
+                                        <li><strong>Одобрен</strong> - запрос принят к исполнению</li>
+                                        <li><strong>Выполнен</strong> - материал предоставлен</li>
+                                        <li><strong>Отклонен</strong> - запрос не может быть выполнен (с комментарием)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Кнопки -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    <a href="@Url.Action("MyRequests", "MaterialRequests")" class="btn btn-secondary me-md-2">
+                                        <i class="fas fa-arrow-left"></i> Отмена
+                                    </a>
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-paper-plane"></i> Отправить запрос
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Полезная информация -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0"><i class="fas fa-lightbulb"></i> Полезные советы</h6>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success"></i> Указывайте полное название материала и автора</li>
+                                <li><i class="fas fa-check text-success"></i> Опишите цель использования материала</li>
+                                <li><i class="fas fa-check text-success"></i> Укажите желаемый срок получения</li>
+                                <li><i class="fas fa-check text-success"></i> Предпочтительный формат (электронный/печатный)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Валидация формы
+            $('form').on('submit', function(e) {
+                let isValid = true;
+
+                // Проверка обязательных полей
+                $('input[required], select[required], textarea[required]').each(function() {
+                    if ($(this).val().trim() === '') {
+                        $(this).addClass('is-invalid');
+                        isValid = false;
+                    } else {
+                        $(this).removeClass('is-invalid');
+                    }
+                });
+
+                if (!isValid) {
+                    e.preventDefault();
+                    alert('Пожалуйста, заполните все обязательные поля (отмечены *).');
+                }
+            });
+
+            // Убираем класс ошибки при вводе
+            $('input, select, textarea').on('input change', function() {
+                if ($(this).val().trim() !== '') {
+                    $(this).removeClass('is-invalid');
+                }
+            });
+
+            // Автоматическое скрытие сообщений
+            setTimeout(function() {
+                $('.alert').fadeOut('slow');
+            }, 5000);
+        });
+    </script>
+}

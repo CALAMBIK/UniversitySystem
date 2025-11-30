@@ -56,6 +56,11 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="About">О системе</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="MaterialRequests" asp-action="MyRequests">
+                                 Мои запросы
+                            </a>
+                        </li>
                     </ul>
                     <ul class="navbar-nav">
                         @if (Context.Session.GetString("UserId") != null)
@@ -72,6 +77,12 @@
                                     </li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
+                                        <a class="dropdown-item" href="@Url.Action("EditProfile", "Account")">
+                                            <i class="fas fa-edit"></i> Редактировать профиль
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
                                         <a class="dropdown-item" href="@Url.Action("Logout", "Account")">
                                             <i class="fas fa-sign-out-alt"></i> Выйти
                                         </a>
@@ -84,6 +95,11 @@
                             <li class="nav-item">
                                 <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="Login">
                                     <i class="fas fa-sign-in-alt"></i> Вход
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="Register">
+                                    <i class="fas fa-user-plus"></i> Регистрация
                                 </a>
                             </li>
                         }
