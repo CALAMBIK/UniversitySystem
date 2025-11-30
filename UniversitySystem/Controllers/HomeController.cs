@@ -40,10 +40,48 @@ namespace UniversitySystem.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult Login(string returnUrl = null)
+        {
+            if (_authService.IsAuthenticated())
+            {
+                return RedirectToAction("Profile", "Account");
+            }
+            
+            ViewBag.ReturnUrl = returnUrl;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(string login, string password, string returnUrl = null)
+        {
+            var user = await _authService.Authenticate(login, password);
+
+            if (user != null)
+            {
+                TempData["SuccessMessage"] = $"Добро пожаловать, {_authService.GetUserName()}!";
+                
+                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                {
+                    return Redirect(returnUrl);
+                }
+                return RedirectToAction("Profile", "Account");
+            }
+
+            TempData["ErrorMessage"] = "Неверный логин или пароль!";
+            ViewBag.ReturnUrl = returnUrl;
+            return View();
+        }
+
         public IActionResult AdminDashboard()
         {
             if (!_authService.IsAuthenticated() || _authService.GetUserRole() != "Admin")
                 return RedirectToAction("AccessDenied", "Account");
+
+            ViewBag.StudentsCount = _context.Students.Count();
+            ViewBag.TeachersCount = _context.Teachers.Count();
+            ViewBag.GroupsCount = _context.StudentGroups.Count();
+            ViewBag.DepartamentsCount = _context.Departaments.Count();
 
             ViewBag.UserName = _authService.GetUserName();
             ViewBag.UserRole = _authService.GetUserRole();
@@ -80,6 +118,12 @@ namespace UniversitySystem.Controllers
                 .ThenInclude(s => s.Group)
                 .ThenInclude(g => g.Departament)
                 .FirstOrDefaultAsync(u => u.IdUser == userId);
+
+            if (user?.Student != null)
+            {
+                ViewBag.GroupStudentsCount = await _context.Students
+                    .CountAsync(s => s.IdGroup == user.Student.IdGroup);
+            }
 
             ViewBag.UserName = _authService.GetUserName();
             ViewBag.UserRole = _authService.GetUserRole();
@@ -183,6 +227,11 @@ namespace UniversitySystem.Controllers
         public IActionResult Contact()
         {
             ViewData["Message"] = "Контактная информация";
+            return View();
+        }
+
+        public IActionResult Error()
+        {
             return View();
         }
     }

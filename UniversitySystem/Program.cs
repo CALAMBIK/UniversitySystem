@@ -2,6 +2,7 @@
 using UniversitySystem.Models;
 using UniversitySystem.Data;
 using UniversitySystem.Services;
+using UniversitySystem.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,7 +49,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseSession(); 
+app.UseSession();
+
+app.UseMiddleware<AuthMiddleware>();
 
 app.UseAuthorization();
 

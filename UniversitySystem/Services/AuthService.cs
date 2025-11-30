@@ -26,16 +26,25 @@ namespace UniversitySystem.Services
                 user.LastLogin = DateTime.Now;
                 await _context.SaveChangesAsync();
 
-                // Сохраняем в сессии
+                string userName = GetUserName(user);
+
                 _httpContextAccessor.HttpContext.Session.SetString("UserId", user.IdUser.ToString());
                 _httpContextAccessor.HttpContext.Session.SetString("UserRole", user.Role);
-                _httpContextAccessor.HttpContext.Session.SetString("UserName",
-                    user.Student != null ? $"{user.Student.SecondName} {user.Student.Name}" :
-                    user.Teacher != null ? $"{user.Teacher.SecondName} {user.Teacher.Name}" :
-                    user.Login);
+                _httpContextAccessor.HttpContext.Session.SetString("UserName", userName);
             }
 
             return user;
+        }
+
+        private string GetUserName(User user)
+        {
+            return user.Role switch
+            {
+                "Student" when user.Student != null => $"{user.Student.SecondName} {user.Student.Name}",
+                "Teacher" when user.Teacher != null => $"{user.Teacher.SecondName} {user.Teacher.Name}",
+                "Admin" => "Администратор",
+                _ => user.Login
+            };
         }
 
         public bool IsAuthenticated()

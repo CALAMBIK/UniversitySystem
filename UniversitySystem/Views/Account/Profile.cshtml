@@ -1,0 +1,159 @@
+﻿@{
+    ViewData["Title"] = "Личный кабинет";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card @(ViewBag.UserRole == "Admin" ? "bg-danger" :
+                                               ViewBag.UserRole == "Teacher" ? "bg-success" : "bg-info") text-white mb-4">
+                <div class="card-body">
+                    <h1 class="card-title">
+                        <i class="fas fa-user-circle"></i> Личный кабинет
+                    </h1>
+                    <p class="card-text">Добро пожаловать, @ViewBag.UserName!</p>
+                    <span class="badge bg-light text-dark">
+                        @(ViewBag.UserRole == "Admin" ? "Администратор" :
+                                                ViewBag.UserRole == "Teacher" ? "Преподаватель" : "Студент")
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-id-card"></i> Персональная информация</h5>
+                </div>
+                <div class="card-body">
+                    @if (ViewBag.UserRole == "Student" && ViewBag.UserData != null)
+                    {
+                        var student = ViewBag.UserData as UniversitySystem.Models.Student;
+                        <p><strong>ФИО:</strong> @student.SecondName @student.Name @student.Patronymic</p>
+                        <p><strong>Группа:</strong> <span class="badge bg-primary">@student.Group?.NumberGroup</span></p>
+                        <p><strong>Кафедра:</strong> @student.Group?.Departament?.Name</p>
+                        <p><strong>Дата рождения:</strong> @student.DateBirthday?.ToString("dd.MM.yyyy")</p>
+                        <p><strong>Телефон:</strong> @student.PhoneNumber</p>
+                    }
+                    else if (ViewBag.UserRole == "Teacher" && ViewBag.UserData != null)
+                    {
+                        var teacher = ViewBag.UserData as UniversitySystem.Models.Teacher;
+                        <p><strong>ФИО:</strong> @teacher.SecondName @teacher.Name @teacher.Patronymic</p>
+                        <p><strong>Кафедра:</strong> @teacher.Departament?.Name</p>
+                        <p><strong>Телефон:</strong> @teacher.PhoneNumber</p>
+                        <p><strong>Логин:</strong> @teacher.Login</p>
+                    }
+                    else if (ViewBag.UserRole == "Admin")
+                    {
+                        <p><strong>Роль:</strong> Администратор системы</p>
+                        <p><strong>Полномочия:</strong> Полный доступ ко всем функциям</p>
+                        <p><strong>Дата регистрации:</strong> @DateTime.Now.ToString("dd.MM.yyyy")</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-rocket"></i> Быстрые действия</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        @if (ViewBag.UserRole == "Admin")
+                        {
+                            <a href="@Url.Action("AdminDashboard", "Home")" class="btn btn-outline-primary">
+                                <i class="fas fa-tachometer-alt"></i> Панель администратора
+                            </a>
+                            <a href="@Url.Action("Index", "Students")" class="btn btn-outline-success">
+                                <i class="fas fa-users"></i> Управление студентами
+                            </a>
+                            <a href="@Url.Action("Index", "Teachers")" class="btn btn-outline-warning">
+                                <i class="fas fa-chalkboard-teacher"></i> Управление преподавателями
+                            </a>
+                        }
+                        else if (ViewBag.UserRole == "Teacher")
+                        {
+                            <a href="@Url.Action("TeacherDashboard", "Home")" class="btn btn-outline-success">
+                                <i class="fas fa-tachometer-alt"></i> Панель преподавателя
+                            </a>
+                            <a href="@Url.Action("Index", "Students")" class="btn btn-outline-primary">
+                                <i class="fas fa-users"></i> Просмотр студентов
+                            </a>
+                        }
+                        else if (ViewBag.UserRole == "Student")
+                        {
+                            <a href="@Url.Action("StudentDashboard", "Home")" class="btn btn-outline-info">
+                                <i class="fas fa-tachometer-alt"></i> Учебный dashboard
+                            </a>
+                        }
+
+                        <a href="@Url.Action("News", "Home")" class="btn btn-outline-info">
+                            <i class="fas fa-newspaper"></i> Новости вуза
+                        </a>
+                        <a href="@Url.Action("Promotions", "Home")" class="btn btn-outline-warning">
+                            <i class="fas fa-percent"></i> Акции и скидки
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (ViewBag.UserRole == "Admin")
+    {
+        <div class="row">
+            <div class="col-12 mb-4">
+                <div class="card">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Статистика системы</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3 text-center">
+                                <h3 class="text-primary">@ViewBag.StudentsCount</h3>
+                                <p class="text-muted">Студентов</p>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <h3 class="text-success">@ViewBag.TeachersCount</h3>
+                                <p class="text-muted">Преподавателей</p>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <h3 class="text-warning">@ViewBag.GroupsCount</h3>
+                                <p class="text-muted">Учебных групп</p>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <h3 class="text-info">@DateTime.Now.ToString("dd.MM.yyyy")</h3>
+                                <p class="text-muted">Сегодня</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0"><i class="fas fa-info-circle"></i> Системная информация</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Последний вход:</strong> @DateTime.Now.ToString("dd.MM.yyyy HH:mm")</p>
+                            <p><strong>IP-адрес:</strong> @Context.Connection.RemoteIpAddress</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Статус системы:</strong> <span class="badge bg-success">Активна</span></p>
+                            <p><strong>Версия:</strong> 1.0.0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
