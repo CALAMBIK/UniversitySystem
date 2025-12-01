@@ -51,16 +51,42 @@
                             <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="News">Новости</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Promotions">Акции</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="About">О системе</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="MaterialRequests" asp-action="MyRequests">
-                                 Мои запросы
-                            </a>
-                        </li>
+                        @if (Context.Session.GetString("UserId") != null && Context.Session.GetString("UserRole") != "Admin")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="MaterialRequests" asp-action="MyRequests">
+                                    Мои запросы
+                                </a>
+                            </li>
+                        }
+                        @if (Context.Session.GetString("UserId") != null && Context.Session.GetString("UserRole") == "Admin")
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown">
+                                     Администрирование
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" href="@Url.Action("AdminDashboard", "Home")">
+                                             Панель управления
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item" href="@Url.Action("Admin", "News")">
+                                           Управление новостями
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="@Url.Action("Admin", "MaterialRequests")">
+                                             Управление запросами
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
                     </ul>
                     <ul class="navbar-nav">
                         @if (Context.Session.GetString("UserId") != null)
@@ -68,23 +94,43 @@
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown">
                                     @Context.Session.GetString("UserName")
+                                    @if (Context.Session.GetString("UserRole") == "Admin")
+                                    {
+                                        <span class="badge bg-danger">Админ</span>
+                                    }
+                                    else if (Context.Session.GetString("UserRole") == "Teacher")
+                                    {
+                                        <span class="badge bg-success">Преподаватель</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-info">Студент</span>
+                                    }
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
                                         <a class="dropdown-item" href="@Url.Action("Profile", "Account")">
-                                            <i class="fas fa-user"></i> Личный кабинет
+                                             Личный кабинет
                                         </a>
                                     </li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
                                         <a class="dropdown-item" href="@Url.Action("EditProfile", "Account")">
-                                            <i class="fas fa-edit"></i> Редактировать профиль
+                                             Редактировать профиль
                                         </a>
                                     </li>
-                                    <li><hr class="dropdown-divider"></li>
+                                    @if (Context.Session.GetString("UserRole") == "Admin")
+                                    {
+                                        <li>
+                                            <a class="dropdown-item" href="@Url.Action("AdminDashboard", "Home")">
+                                                 Панель администратора
+                                            </a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                    }
                                     <li>
                                         <a class="dropdown-item" href="@Url.Action("Logout", "Account")">
-                                            <i class="fas fa-sign-out-alt"></i> Выйти
+                                             Выйти
                                         </a>
                                     </li>
                                 </ul>
@@ -94,12 +140,12 @@
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="Login">
-                                    <i class="fas fa-sign-in-alt"></i> Вход
+                                     Вход
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="Register">
-                                    <i class="fas fa-user-plus"></i> Регистрация
+                                    Регистрация
                                 </a>
                             </li>
                         }

@@ -9,7 +9,7 @@
             <div class="card shadow">
                 <div class="card-header bg-primary text-white">
                     <h3 class="mb-0">
-                        <i class="fas fa-user-edit"></i> Редактирование профиля
+                        Редактирование профиля
                     </h3>
                 </div>
                 <div class="card-body">
@@ -30,11 +30,10 @@
                     <form method="post">
                         @Html.AntiForgeryToken()
 
-                        <!-- Основная информация -->
                         <div class="row mb-4">
                             <div class="col-12">
                                 <h5 class="text-primary">
-                                    <i class="fas fa-id-card"></i> Основная информация
+                                    Основная информация
                                 </h5>
                                 <hr>
                             </div>
@@ -99,11 +98,10 @@
                             }
                         </div>
 
-                        <!-- Контактная информация -->
                         <div class="row mb-4">
                             <div class="col-12">
                                 <h5 class="text-primary">
-                                    <i class="fas fa-envelope"></i> Контактная информация
+                                     Контактная информация
                                 </h5>
                                 <hr>
                             </div>
@@ -133,11 +131,10 @@
                             </div>
                         </div>
 
-                        <!-- Дополнительная информация -->
                         <div class="row mb-4">
                             <div class="col-12">
                                 <h5 class="text-primary">
-                                    <i class="fas fa-info-circle"></i> Дополнительная информация
+                                   Дополнительная информация
                                 </h5>
                                 <hr>
                             </div>
@@ -166,15 +163,14 @@
                             </div>
                         </div>
 
-                        <!-- Кнопки -->
                         <div class="row mt-4">
                             <div class="col-12">
                                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                                     <a href="@Url.Action("Profile", "Account")" class="btn btn-secondary me-md-2">
-                                        <i class="fas fa-arrow-left"></i> Назад к профилю
+                                         Назад к профилю
                                     </a>
                                     <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-save"></i> Сохранить изменения
+                                         Сохранить изменения
                                     </button>
                                 </div>
                             </div>
@@ -183,16 +179,15 @@
                 </div>
             </div>
 
-            <!-- Быстрые действия -->
             <div class="row mt-4">
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-header bg-warning text-dark">
-                            <h6 class="mb-0"><i class="fas fa-key"></i> Безопасность</h6>
+                            <h6 class="mb-0"> Безопасность</h6>
                         </div>
                         <div class="card-body">
                             <a href="@Url.Action("ChangePassword", "Account")" class="btn btn-outline-warning btn-sm">
-                                <i class="fas fa-lock"></i> Сменить пароль
+                                 Сменить пароль
                             </a>
                         </div>
                     </div>
@@ -200,11 +195,11 @@
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-header bg-info text-white">
-                            <h6 class="mb-0"><i class="fas fa-user-circle"></i> Профиль</h6>
+                            <h6 class="mb-0"> Профиль</h6>
                         </div>
                         <div class="card-body">
                             <a href="@Url.Action("Profile", "Account")" class="btn btn-outline-info btn-sm">
-                                <i class="fas fa-eye"></i> Просмотр профиля
+                                 Просмотр профиля
                             </a>
                         </div>
                     </div>
@@ -216,17 +211,14 @@
 
 @section Scripts {
     <script>
-        // Автоматическое скрытие сообщений через 5 секунд
         setTimeout(function() {
             $('.alert').fadeOut('slow');
         }, 5000);
 
-        // Валидация формы
         $(document).ready(function() {
             $('form').on('submit', function(e) {
                 let isValid = true;
 
-                // Проверка обязательных полей
                 $('input[required]').each(function() {
                     if ($(this).val().trim() === '') {
                         $(this).addClass('is-invalid');
@@ -242,7 +234,6 @@
                 }
             });
 
-            // Убираем класс ошибки при вводе
             $('input[required]').on('input', function() {
                 if ($(this).val().trim() !== '') {
                     $(this).removeClass('is-invalid');

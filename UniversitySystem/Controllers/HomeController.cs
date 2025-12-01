@@ -83,6 +83,12 @@ namespace UniversitySystem.Controllers
             ViewBag.GroupsCount = _context.StudentGroups.Count();
             ViewBag.DepartamentsCount = _context.Departaments.Count();
 
+            ViewBag.NewsCount = _context.News.Count();
+            ViewBag.PublishedNewsCount = _context.News.Count(n => n.IsPublished);
+
+            ViewBag.PendingRequestsCount = _context.MaterialRequests.Count(r => r.Status == "Pending");
+            ViewBag.TotalRequestsCount = _context.MaterialRequests.Count();
+
             ViewBag.UserName = _authService.GetUserName();
             ViewBag.UserRole = _authService.GetUserRole();
 

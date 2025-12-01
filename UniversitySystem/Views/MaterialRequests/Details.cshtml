@@ -9,7 +9,7 @@
             <div class="card bg-info text-white mb-4">
                 <div class="card-body">
                     <h1 class="card-title">
-                        <i class="fas fa-file-alt"></i> Детали запроса
+                         Детали запроса
                     </h1>
                     <p class="card-text">Информация о вашем запросе на учебные материалы</p>
                 </div>
@@ -21,7 +21,7 @@
         <div class="col-md-8">
             <div class="card mb-4">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0"><i class="fas fa-info-circle"></i> Основная информация</h5>
+                    <h5 class="mb-0"> Основная информация</h5>
                 </div>
                 <div class="card-body">
                     <table class="table table-borderless">
@@ -47,7 +47,7 @@
                                 <th>Ссылка на файл:</th>
                                 <td>
                                     <a href="@Model.FileUrl" target="_blank" class="btn btn-sm btn-outline-primary">
-                                        <i class="fas fa-external-link-alt"></i> Открыть
+                                         Открыть
                                     </a>
                                 </td>
                             </tr>
@@ -60,20 +60,20 @@
         <div class="col-md-4">
             <div class="card mb-4">
                 <div class="card-header bg-warning text-dark">
-                    <h5 class="mb-0"><i class="fas fa-tasks"></i> Статус запроса</h5>
+                    <h5 class="mb-0"> Статус запроса</h5>
                 </div>
                 <div class="card-body text-center">
                     @switch (Model.Status)
                     {
                         case "Pending":
                             <div class="alert alert-warning">
-                                <h5><i class="fas fa-clock"></i> На рассмотрении</h5>
+                                <h5> На рассмотрении</h5>
                                 <p class="mb-0">Запрос ожидает обработки администратором</p>
                             </div>
                             break;
                         case "Approved":
                             <div class="alert alert-success">
-                                <h5><i class="fas fa-check-circle"></i> Одобрен</h5>
+                                <h5> Одобрен</h5>
                                 <p class="mb-0">Запрос принят к исполнению</p>
                                 @if (Model.ProcessedDate.HasValue)
                                 {
@@ -83,7 +83,7 @@
                             break;
                         case "Rejected":
                             <div class="alert alert-danger">
-                                <h5><i class="fas fa-times-circle"></i> Отклонен</h5>
+                                <h5> Отклонен</h5>
                                 <p class="mb-0">Запрос не может быть выполнен</p>
                                 @if (Model.ProcessedDate.HasValue)
                                 {
@@ -93,7 +93,7 @@
                             break;
                         case "Completed":
                             <div class="alert alert-primary">
-                                <h5><i class="fas fa-check-double"></i> Выполнен</h5>
+                                <h5> Выполнен</h5>
                                 <p class="mb-0">Материал предоставлен</p>
                                 @if (Model.CompletedDate.HasValue)
                                 {
@@ -121,10 +121,10 @@
         <div class="col-12">
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                 <a href="@Url.Action("MyRequests", "MaterialRequests")" class="btn btn-secondary me-md-2">
-                    <i class="fas fa-arrow-left"></i> Назад к списку
+                     Назад к списку
                 </a>
                 <a href="@Url.Action("Create", "MaterialRequests")" class="btn btn-success">
-                    <i class="fas fa-plus"></i> Новый запрос
+                     Новый запрос
                 </a>
             </div>
         </div>

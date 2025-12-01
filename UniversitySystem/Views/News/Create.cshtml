@@ -1,0 +1,115 @@
+﻿@model UniversitySystem.Models.News
+@{
+    ViewData["Title"] = "Создание новости";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h3 class="mb-0">
+                         Создание новости
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        @Html.AntiForgeryToken()
+
+                        <div class="mb-3">
+                            <label asp-for="Title" class="form-label">Заголовок новости *</label>
+                            <input asp-for="Title" class="form-control" placeholder="Введите заголовок новости" required>
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Content" class="form-label">Содержание новости *</label>
+                            <textarea asp-for="Content" class="form-control" rows="10"
+                                      placeholder="Введите содержание новости..." required></textarea>
+                            <span asp-validation-for="Content" class="text-danger"></span>
+                            <div class="form-text">Поддерживается HTML-разметка</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ImageUrl" class="form-label">Ссылка на изображение</label>
+                            <input asp-for="ImageUrl" class="form-control"
+                                   placeholder="https://example.com/image.jpg">
+                            <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                            <div class="form-text">Необязательное поле</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="PublishDate" class="form-label">Дата публикации</label>
+                                <input asp-for="PublishDate" class="form-control" type="datetime-local">
+                                <span asp-validation-for="PublishDate" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Статус публикации</label>
+                                <div class="form-check form-switch mt-2">
+                                    <input asp-for="IsPublished" class="form-check-input" type="checkbox" checked>
+                                    <label asp-for="IsPublished" class="form-check-label">Опубликовать сразу</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <a href="@Url.Action("Admin", "News")" class="btn btn-secondary me-md-2">
+                                 Отмена
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                 Создать новость
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0"> Советы по созданию новостей</h6>
+                </div>
+                <div class="card-body">
+                    <ul class="mb-0">
+                        <li><strong>Заголовок:</strong> Должен быть кратким и привлекающим внимание</li>
+                        <li><strong>Содержание:</strong> Пишите понятным языком, разделяйте на абзацы</li>
+                        <li><strong>Изображения:</strong> Используйте качественные изображения для лучшего восприятия</li>
+                        <li><strong>Дата публикации:</strong> Можно запланировать публикацию на будущее</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            const now = new Date();
+            const localDateTime = now.toISOString().slice(0, 16);
+            $('#PublishDate').val(localDateTime);
+
+            $('form').on('submit', function(e) {
+                let isValid = true;
+
+                $('input[required], textarea[required]').each(function() {
+                    if ($(this).val().trim() === '') {
+                        $(this).addClass('is-invalid');
+                        isValid = false;
+                    } else {
+                        $(this).removeClass('is-invalid');
+                    }
+                });
+
+                if (!isValid) {
+                    e.preventDefault();
+                    alert('Пожалуйста, заполните все обязательные поля (отмечены *).');
+                }
+            });
+
+            $('input, textarea').on('input', function() {
+                $(this).removeClass('is-invalid');
+            });
+        });
+    </script>
+}

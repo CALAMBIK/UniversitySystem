@@ -16,7 +16,6 @@ namespace UniversitySystem.Data
 
                 Console.WriteLine("База создана. Начинаем заполнение...");
 
-                // ========== Кафедры ==========
                 var departaments = new Departament[]
                 {
                     new Departament { Name = "Информатика и ВТ" },
@@ -31,7 +30,6 @@ namespace UniversitySystem.Data
                 context.SaveChanges();
                 Console.WriteLine($"✅ Добавлено кафедр: {departaments.Length}");
 
-                // ========== Группы ==========
                 var groups = new StudentGroup[]
                 {
                     new StudentGroup { IdDepartament = 1, NumberGroup = 101 },
@@ -47,9 +45,8 @@ namespace UniversitySystem.Data
                 };
                 context.StudentGroups.AddRange(groups);
                 context.SaveChanges();
-                Console.WriteLine($"✅ Добавлено групп: {groups.Length}");
+                Console.WriteLine($"Добавлено групп: {groups.Length}");
 
-                // ========== Генерация студентов ==========
                 var students = new List<Student>();
                 string[] firstNames = { "Иван", "Алексей", "Мария", "Анна", "Дмитрий", "Екатерина", "Никита", "Светлана", "Андрей", "Ольга", "Виктор", "Татьяна", "Сергей", "Юлия", "Константин", "Надежда", "Михаил", "Людмила", "Анатолий", "Ирина", "Владимир", "Ксения", "Роман", "Елена", "Павел", "Марина", "Григорий", "Софья", "Евгений", "Алёна", "Денис", "Вероника", "Илья", "Оксана", "Артем", "Дарья", "Федор", "Валерия", "Александр", "Полина", "Вадим", "Наталья", "Тимур", "Лариса", "Даниил", "Анжелика", "Вячеслав", "Маргарита", "Станислав" };
                 string[] lastNames = { "Иванов", "Петров", "Смирнов", "Кузнецова", "Соколов", "Лебедева", "Попов", "Орлова", "Морозов", "Федоров", "Васильева", "Гусев", "Жукова", "Кириллов", "Логинова", "Данилов", "Власова", "Кузьмин", "Семенова", "Фролов" };
@@ -72,9 +69,8 @@ namespace UniversitySystem.Data
                 }
                 context.Students.AddRange(students);
                 context.SaveChanges();
-                Console.WriteLine($"✅ Добавлено студентов: {students.Count}");
+                Console.WriteLine($" Добавлено студентов: {students.Count}");
 
-                // ========== Преподаватели ==========
                 var teachers = new List<Teacher>
                 {
                     new Teacher { IdDepartament = 1, Name = "Алексей", SecondName = "Смирнов", Patronymic = "Владимирович", PhoneNumber = "+79992220001", Login = "teacher1", Password = "123" },
@@ -90,9 +86,8 @@ namespace UniversitySystem.Data
                 };
                 context.Teachers.AddRange(teachers);
                 context.SaveChanges();
-                Console.WriteLine($"✅ Добавлено преподавателей: {teachers.Count}");
+                Console.WriteLine($"Добавлено преподавателей: {teachers.Count}");
 
-                // ========== Дисциплины ==========
                 var disciplines = new Discipline[]
                 {
                     new Discipline { Name = "Программирование" },
@@ -108,9 +103,8 @@ namespace UniversitySystem.Data
                 };
                 context.Disciplines.AddRange(disciplines);
                 context.SaveChanges();
-                Console.WriteLine($"✅ Добавлено дисциплин: {disciplines.Length}");
+                Console.WriteLine($" Добавлено дисциплин: {disciplines.Length}");
 
-                // ========== Пользователи ==========
                 var users = new List<User> { new User { Login = "admin", Password = "123", Role = "Admin" } };
 
                 for (int i = 1; i <= students.Count; i++)
@@ -137,9 +131,8 @@ namespace UniversitySystem.Data
 
                 context.Users.AddRange(users);
                 context.SaveChanges();
-                Console.WriteLine($"✅ Добавлено пользователей: {users.Count}");
+                Console.WriteLine($"Добавлено пользователей: {users.Count}");
 
-                // ========== Новости ==========
                 var news = new List<News>
                 {
                     new News { Title = "Открытие нового компьютерного класса", Content = "В нашем вузе открылся новый современный компьютерный класс.", Author = "Администрация", PublishDate = DateTime.Now.AddDays(-2), IsPublished = true },
@@ -148,9 +141,8 @@ namespace UniversitySystem.Data
                 };
                 context.News.AddRange(news);
                 context.SaveChanges();
-                Console.WriteLine($"✅ Добавлено новостей: {news.Count}");
+                Console.WriteLine($"Добавлено новостей: {news.Count}");
 
-                // ========== Акции ==========
                 var promotions = new List<Promotion>
                 {
                     new Promotion { Title = "Скидка на общежитие", Description = "Скидка 50% на проживание для отличников.", Discount = "50%", StartDate = DateTime.Now.AddDays(-5), EndDate = DateTime.Now.AddDays(25), IsActive = true },
@@ -158,12 +150,11 @@ namespace UniversitySystem.Data
                 };
                 context.Promotions.AddRange(promotions);
                 context.SaveChanges();
-                Console.WriteLine($"✅ Добавлено акций: {promotions.Count}");
+                Console.WriteLine($"Добавлено акций: {promotions.Count}");
 
-                Console.WriteLine("🎉 База данных успешно инициализирована!");
-                Console.WriteLine($"📊 ИТОГО: {departaments.Length} кафедр, {groups.Length} групп, {students.Count} студентов, {teachers.Count} преподавателей, {disciplines.Length} дисциплин, {users.Count} пользователей, {news.Count} новостей, {promotions.Count} акций");
+                Console.WriteLine("База данных успешно инициализирована!");
+                Console.WriteLine($"ИТОГО: {departaments.Length} кафедр, {groups.Length} групп, {students.Count} студентов, {teachers.Count} преподавателей, {disciplines.Length} дисциплин, {users.Count} пользователей, {news.Count} новостей, {promotions.Count} акций");
 
-                // ========== Профили пользователей ==========
                 var userProfiles = new List<UserProfile>();
                 foreach (var user in users)
                 {
@@ -177,7 +168,7 @@ namespace UniversitySystem.Data
                 }
                 context.UserProfiles.AddRange(userProfiles);
                 context.SaveChanges();
-                Console.WriteLine($"✅ Добавлено профилей: {userProfiles.Count}");
+                Console.WriteLine($"Добавлено профилей: {userProfiles.Count}");
 
                 var materialRequests = new List<MaterialRequest>
                 {
@@ -215,13 +206,13 @@ namespace UniversitySystem.Data
 
                 context.MaterialRequests.AddRange(materialRequests);
                 context.SaveChanges();
-                Console.WriteLine($"✅ Добавлено запросов: {materialRequests.Count}");
+                Console.WriteLine($"Добавлено запросов: {materialRequests.Count}");
 
 
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Ошибка при инициализации: {ex.Message}");
+                Console.WriteLine($"Ошибка при инициализации: {ex.Message}");
                 Console.WriteLine($"StackTrace: {ex.StackTrace}");
                 if (ex.InnerException != null)
                 {

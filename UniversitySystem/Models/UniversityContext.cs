@@ -20,7 +20,6 @@ namespace UniversitySystem.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Настройка Student
             modelBuilder.Entity<Student>(entity =>
             {
                 entity.HasKey(e => e.IdStudent);
@@ -29,7 +28,6 @@ namespace UniversitySystem.Data
                     .HasForeignKey(s => s.IdGroup);
             });
 
-            // Настройка StudentGroup
             modelBuilder.Entity<StudentGroup>(entity =>
             {
                 entity.HasKey(e => e.IdGroup);
@@ -38,7 +36,6 @@ namespace UniversitySystem.Data
                     .HasForeignKey(g => g.IdDepartament);
             });
 
-            // Настройка Teacher
             modelBuilder.Entity<Teacher>(entity =>
             {
                 entity.HasKey(e => e.IdTeacher);
@@ -47,7 +44,6 @@ namespace UniversitySystem.Data
                     .HasForeignKey(t => t.IdDepartament);
             });
 
-            // Настройка User
             modelBuilder.Entity<User>(entity =>
             {
                 entity.HasKey(e => e.IdUser);
@@ -59,7 +55,6 @@ namespace UniversitySystem.Data
                     .HasForeignKey(u => u.IdTeacher);
             });
 
-            // Настройка MaterialRequest
             modelBuilder.Entity<MaterialRequest>(entity =>
             {
                 entity.HasKey(e => e.IdRequest);
@@ -68,7 +63,6 @@ namespace UniversitySystem.Data
                     .HasForeignKey(m => m.IdUser);
             });
 
-            // Настройка UserProfile
             modelBuilder.Entity<UserProfile>(entity =>
             {
                 entity.HasKey(e => e.IdProfile);

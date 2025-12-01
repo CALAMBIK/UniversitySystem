@@ -7,7 +7,7 @@
         <div class="col-md-8">
             <div class="card shadow">
                 <div class="card-header bg-success text-white text-center">
-                    <h3 class="mb-0"><i class="fas fa-user-plus"></i> Регистрация в системе</h3>
+                    <h3 class="mb-0"> Регистрация в системе</h3>
                 </div>
                 <div class="card-body">
                     @if (TempData["ErrorMessage"] != null)
@@ -18,11 +18,10 @@
                     }
 
                     <form method="post">
-                        <!-- Личные данные -->
                         <div class="row mb-4">
                             <div class="col-12">
                                 <h5 class="text-primary">
-                                    <i class="fas fa-id-card"></i> Личные данные
+                                     Личные данные
                                 </h5>
                                 <hr>
                             </div>
@@ -46,11 +45,10 @@
                             </div>
                         </div>
 
-                        <!-- Контактная информация -->
                         <div class="row mb-4">
                             <div class="col-12">
                                 <h5 class="text-primary">
-                                    <i class="fas fa-address-book"></i> Контактная информация
+                                     Контактная информация
                                 </h5>
                                 <hr>
                             </div>
@@ -69,11 +67,10 @@
                             </div>
                         </div>
 
-                        <!-- Учетные данные -->
                         <div class="row mb-4">
                             <div class="col-12">
                                 <h5 class="text-primary">
-                                    <i class="fas fa-key"></i> Учетные данные
+                                     Учетные данные
                                 </h5>
                                 <hr>
                             </div>
@@ -110,12 +107,11 @@
                             </div>
                         </div>
 
-                        <!-- Дополнительная информация для студентов -->
                         <div id="studentFields" style="display: none;">
                             <div class="row mb-4">
                                 <div class="col-12">
                                     <h5 class="text-info">
-                                        <i class="fas fa-graduation-cap"></i> Информация для студентов
+                                         Информация для студентов
                                     </h5>
                                     <hr>
                                 </div>
@@ -125,7 +121,6 @@
                                     <label for="groupId" class="form-label">Группа</label>
                                     <select class="form-control" id="groupId" name="groupId">
                                         <option value="">Выберите группу (опционально)</option>
-                                        <!-- Группы будут заполнены через JavaScript -->
                                     </select>
                                     <div class="form-text">Можно выбрать позже в личном кабинете</div>
                                 </div>
@@ -136,12 +131,11 @@
                             </div>
                         </div>
 
-                        <!-- Дополнительная информация для преподавателей -->
                         <div id="teacherFields" style="display: none;">
                             <div class="row mb-4">
                                 <div class="col-12">
                                     <h5 class="text-warning">
-                                        <i class="fas fa-chalkboard-teacher"></i> Информация для преподавателей
+                                         Информация для преподавателей
                                     </h5>
                                     <hr>
                                 </div>
@@ -151,7 +145,6 @@
                                     <label for="departamentId" class="form-label">Кафедра</label>
                                     <select class="form-control" id="departamentId" name="departamentId">
                                         <option value="">Выберите кафедру (опционально)</option>
-                                        <!-- Кафедры будут заполнены через JavaScript -->
                                     </select>
                                     <div class="form-text">Можно выбрать позже в личном кабинете</div>
                                 </div>
@@ -165,17 +158,17 @@
 
                         <div class="d-grid gap-2 mt-4">
                             <button type="submit" class="btn btn-success btn-lg">
-                                <i class="fas fa-user-plus"></i> Зарегистрироваться
+                                 Зарегистрироваться
                             </button>
                             <a href="@Url.Action("Login", "Account")" class="btn btn-outline-secondary">
-                                <i class="fas fa-sign-in-alt"></i> Уже есть аккаунт? Войти
+                                Уже есть аккаунт? Войти
                             </a>
                         </div>
                     </form>
 
                     <div class="mt-4">
                         <div class="alert alert-info">
-                            <h6><i class="fas fa-info-circle"></i> Информация о регистрации:</h6>
+                            <h6> Информация о регистрации:</h6>
                             <ul class="mb-0 small">
                                 <li>Все поля, отмеченные *, обязательны для заполнения</li>
                                 <li>После регистрации вы автоматически войдете в систему</li>
@@ -193,7 +186,6 @@
 @section Scripts {
     <script>
         $(document).ready(function() {
-            // Списки групп и кафедр из вашей базы данных
             const groups = [
                 { idGroup: 1, numberGroup: 101, departamentName: "Информатика и ВТ" },
                 { idGroup: 2, numberGroup: 102, departamentName: "Информатика и ВТ" },
@@ -217,7 +209,6 @@
                 { idDepartament: 7, name: "Иностранные языки" }
             ];
 
-            // Показ/скрытие дополнительных полей в зависимости от роли
             $('#role').change(function() {
                 const role = $(this).val();
                 $('#studentFields').hide();
@@ -232,7 +223,6 @@
                 }
             });
 
-            // Загрузка групп для студентов
             function loadGroups() {
                 const groupSelect = $('#groupId');
                 groupSelect.empty();
@@ -243,7 +233,6 @@
                 });
             }
 
-            // Загрузка кафедр для преподавателей
             function loadDepartaments() {
                 const departamentSelect = $('#departamentId');
                 departamentSelect.empty();
@@ -254,7 +243,6 @@
                 });
             }
 
-            // Валидация пароля
             $('#password').on('input', function() {
                 if ($(this).val().length < 6) {
                     $(this).addClass('is-invalid');
@@ -263,7 +251,6 @@
                 }
             });
 
-            // Проверка совпадения паролей
             $('#confirmPassword').on('input', function() {
                 if ($(this).val() !== $('#password').val()) {
                     $(this).addClass('is-invalid');
@@ -272,11 +259,9 @@
                 }
             });
 
-            // Валидация формы
             $('form').on('submit', function(e) {
                 let isValid = true;
 
-                // Проверка обязательных полей
                 $('input[required], select[required]').each(function() {
                     if ($(this).val().trim() === '') {
                         $(this).addClass('is-invalid');
@@ -286,13 +271,11 @@
                     }
                 });
 
-                // Проверка длины пароля
                 if ($('#password').val().length < 6) {
                     $('#password').addClass('is-invalid');
                     isValid = false;
                 }
 
-                // Проверка совпадения паролей
                 if ($('#password').val() !== $('#confirmPassword').val()) {
                     $('#confirmPassword').addClass('is-invalid');
                     isValid = false;
@@ -304,12 +287,10 @@
                 }
             });
 
-            // Убираем ошибки при вводе
             $('input, select').on('input change', function() {
                 $(this).removeClass('is-invalid');
             });
 
-            // Автоматическое скрытие сообщений
             setTimeout(function() {
                 $('.alert').fadeOut('slow');
             }, 5000);

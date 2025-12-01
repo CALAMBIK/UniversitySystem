@@ -9,7 +9,7 @@
             <div class="card bg-primary text-white mb-4">
                 <div class="card-body">
                     <h1 class="card-title">
-                        <i class="fas fa-book"></i> Мои запросы учебных материалов
+                         Мои запросы учебных материалов
                     </h1>
                     <p class="card-text">История ваших запросов на учебные материалы</p>
                 </div>
@@ -20,7 +20,7 @@
     <div class="row mb-4">
         <div class="col-12">
             <a href="@Url.Action("Create", "MaterialRequests")" class="btn btn-success">
-                <i class="fas fa-plus"></i> Создать новый запрос
+                Создать новый запрос
             </a>
         </div>
     </div>
@@ -28,7 +28,7 @@
     @if (!Model.Any())
     {
         <div class="alert alert-info">
-            <h5><i class="fas fa-info-circle"></i> У вас пока нет запросов</h5>
+            <h5> У вас пока нет запросов</h5>
             <p>Создайте свой первый запрос на учебные материалы!</p>
             <a href="@Url.Action("Create", "MaterialRequests")" class="btn btn-primary">Создать запрос</a>
         </div>
@@ -39,7 +39,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header bg-dark text-white">
-                        <h5 class="mb-0"><i class="fas fa-list"></i> История запросов</h5>
+                        <h5 class="mb-0"> История запросов</h5>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">

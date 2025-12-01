@@ -17,7 +17,6 @@ namespace UniversitySystem.Controllers
             _authService = authService;
         }
 
-        // Просмотр всех запросов пользователя
         public async Task<IActionResult> MyRequests()
         {
             if (!_authService.IsAuthenticated())
@@ -32,7 +31,6 @@ namespace UniversitySystem.Controllers
             return View(requests);
         }
 
-        // Создание нового запроса
         [HttpGet]
         public IActionResult Create()
         {
@@ -64,8 +62,6 @@ namespace UniversitySystem.Controllers
 
             return View(request);
         }
-
-        // Детали запроса
         public async Task<IActionResult> Details(int id)
         {
             if (!_authService.IsAuthenticated())
@@ -83,7 +79,6 @@ namespace UniversitySystem.Controllers
             return View(request);
         }
 
-        // Для администратора - управление всеми запросами
         public async Task<IActionResult> Admin()
         {
             if (!_authService.IsAuthenticated() || _authService.GetUserRole() != "Admin")
@@ -91,15 +86,18 @@ namespace UniversitySystem.Controllers
 
             var requests = await _context.MaterialRequests
                 .Include(r => r.User)
+                .ThenInclude(u => u.Student)
+                .Include(r => r.User)
+                .ThenInclude(u => u.Teacher)
                 .OrderByDescending(r => r.CreatedDate)
                 .ToListAsync();
 
             return View(requests);
         }
 
-        // Изменение статуса запроса (для админа)
         [HttpPost]
-        public async Task<IActionResult> UpdateStatus(int id, string status, string comment)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateStatus(int id, string status, string adminComment)
         {
             if (!_authService.IsAuthenticated() || _authService.GetUserRole() != "Admin")
                 return RedirectToAction("AccessDenied", "Account");
@@ -111,17 +109,52 @@ namespace UniversitySystem.Controllers
             }
 
             request.Status = status;
-            request.AdminComment = comment;
+            request.AdminComment = adminComment;
 
-            if (status == "Approved")
+            if (status == "Approved" || status == "Rejected")
+            {
                 request.ProcessedDate = DateTime.Now;
+            }
             else if (status == "Completed")
+            {
                 request.CompletedDate = DateTime.Now;
+            }
 
+            _context.MaterialRequests.Update(request);
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Статус запроса обновлен!";
+            TempData["SuccessMessage"] = $"Статус запроса обновлен на '{GetStatusDisplayName(status)}'!";
             return RedirectToAction("Admin");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            if (!_authService.IsAuthenticated() || _authService.GetUserRole() != "Admin")
+                return RedirectToAction("AccessDenied", "Account");
+
+            var request = await _context.MaterialRequests.FindAsync(id);
+            if (request != null)
+            {
+                _context.MaterialRequests.Remove(request);
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Запрос успешно удален!";
+            }
+
+            return RedirectToAction("Admin");
+        }
+
+        private string GetStatusDisplayName(string status)
+        {
+            return status switch
+            {
+                "Pending" => "На рассмотрении",
+                "Approved" => "Одобрен",
+                "Rejected" => "Отклонен",
+                "Completed" => "Выполнен",
+                _ => status
+            };
         }
     }
 }

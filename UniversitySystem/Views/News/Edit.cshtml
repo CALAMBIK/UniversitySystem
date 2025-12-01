@@ -1,0 +1,108 @@
+﻿@model UniversitySystem.Models.News
+@{
+    ViewData["Title"] = "Редактирование новости";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">
+                         Редактирование новости
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="IdNews" />
+
+                        <div class="mb-3">
+                            <label asp-for="Title" class="form-label">Заголовок новости *</label>
+                            <input asp-for="Title" class="form-control" placeholder="Введите заголовок новости" required>
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Content" class="form-label">Содержание новости *</label>
+                            <textarea asp-for="Content" class="form-control" rows="10"
+                                      placeholder="Введите содержание новости..." required></textarea>
+                            <span asp-validation-for="Content" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ImageUrl" class="form-label">Ссылка на изображение</label>
+                            <input asp-for="ImageUrl" class="form-control"
+                                   placeholder="https://example.com/image.jpg">
+                            <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                            {
+                                <div class="mt-2">
+                                    <img src="@Model.ImageUrl" class="img-thumbnail" style="max-height: 150px;" alt="Текущее изображение">
+                                </div>
+                            }
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="PublishDate" class="form-label">Дата публикации</label>
+                                <input asp-for="PublishDate" class="form-control" type="datetime-local">
+                                <span asp-validation-for="PublishDate" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Статус публикации</label>
+                                <div class="form-check form-switch mt-2">
+                                    <input asp-for="IsPublished" class="form-check-input" type="checkbox">
+                                    <label asp-for="IsPublished" class="form-check-label">Опубликована</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <strong>Информация о новости:</strong><br>
+                            <strong>Дата создания:</strong> @Model.CreatedDate.ToString("dd.MM.yyyy HH:mm")<br>
+                            <strong>Автор:</strong> @(Model.Author ?? "Администрация")
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <a href="@Url.Action("Admin", "News")" class="btn btn-secondary me-md-2">
+                                 Отмена
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                            Сохранить изменения
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('form').on('submit', function(e) {
+                let isValid = true;
+
+                $('input[required], textarea[required]').each(function() {
+                    if ($(this).val().trim() === '') {
+                        $(this).addClass('is-invalid');
+                        isValid = false;
+                    } else {
+                        $(this).removeClass('is-invalid');
+                    }
+                });
+
+                if (!isValid) {
+                    e.preventDefault();
+                    alert('Пожалуйста, заполните все обязательные поля (отмечены *).');
+                }
+            });
+
+            $('input, textarea').on('input', function() {
+                $(this).removeClass('is-invalid');
+            });
+        });
+    </script>
+}

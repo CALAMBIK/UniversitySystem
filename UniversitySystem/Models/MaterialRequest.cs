@@ -18,7 +18,7 @@ namespace UniversitySystem.Models
         public string Description { get; set; }
 
         [StringLength(50)]
-        public string MaterialType { get; set; } // "Учебник", "Пособие", "Статья", "Презентация"
+        public string MaterialType { get; set; }
 
         [StringLength(20)]
         public string Status { get; set; } = "Pending"; // "Pending", "Approved", "Rejected", "Completed"
