@@ -1,0 +1,169 @@
+﻿@{
+    ViewData["Title"] = "Назначение дисциплин преподавателю";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card bg-warning text-dark mb-4">
+                <div class="card-body">
+                    <h1 class="card-title">Назначение дисциплин преподавателю</h1>
+                    <p class="card-text">Преподаватель: @ViewBag.Teacher?.SecondName @ViewBag.Teacher?.Name</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow">
+                <div class="card-body">
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger">
+                            @TempData["ErrorMessage"]
+                        </div>
+                    }
+
+                    <form method="post" id="assignForm">
+                        @Html.AntiForgeryToken()
+
+                        <div id="disciplinesContainer">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Дисциплина</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Группа (опционально)</label>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3 discipline-row">
+                                <div class="col-md-6">
+                                    <select name="disciplineIds" class="form-control" required>
+                                        <option value="">Выберите дисциплину</option>
+                                        @foreach (var discipline in ViewBag.Disciplines)
+                                        {
+                                            <option value="@discipline.IdDiscipline">@discipline.Name</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-5">
+                                    <select name="groupIds" class="form-control">
+                                        <option value="0">Без группы (общая дисциплина)</option>
+                                        @foreach (var group in ViewBag.Groups)
+                                        {
+                                            <option value="@group.IdGroup">Группа @group.NumberGroup (@group.Departament?.Name)</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="button" class="btn btn-danger btn-sm remove-discipline" disabled>
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <button type="button" id="addDiscipline" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-plus"></i> Добавить еще дисциплину
+                            </button>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                Назначить дисциплины
+                            </button>
+                            <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                                Назад к списку преподавателей
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Текущие дисциплины преподавателя</h5>
+                </div>
+                <div class="card-body">
+                    @if (ViewBag.SelectedDisciplines != null && ViewBag.SelectedDisciplines.Count > 0)
+                    {
+                        <div class="alert alert-success">
+                            <strong>Преподаватель уже ведет следующие дисциплины:</strong>
+                            <ul>
+                                @foreach (var disciplineId in ViewBag.SelectedDisciplines)
+                                {
+                                    var discipline = ((List<UniversitySystem.Models.Discipline>)ViewBag.Disciplines)
+                                    .FirstOrDefault(d => d.IdDiscipline == disciplineId);
+                                    if (discipline != null)
+                                    {
+                                        <li>@discipline.Name</li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning">
+                            У преподавателя пока нет назначенных дисциплин
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            let disciplineCounter = 1;
+
+            // Добавить новую строку дисциплины
+            $('#addDiscipline').click(function() {
+                const newRow = $('.discipline-row:first').clone();
+                newRow.find('select').val('');
+                newRow.find('.remove-discipline').prop('disabled', false);
+
+                $('#disciplinesContainer').append(newRow);
+                disciplineCounter++;
+            });
+
+            // Удалить строку дисциплины
+            $(document).on('click', '.remove-discipline', function() {
+                if ($('.discipline-row').length > 1) {
+                    $(this).closest('.discipline-row').remove();
+                }
+            });
+
+            // Валидация формы
+            $('#assignForm').on('submit', function(e) {
+                let isValid = true;
+                let selectedDisciplines = [];
+
+                $('select[name="disciplineIds"]').each(function() {
+                    const value = $(this).val();
+                    if (value) {
+                        if (selectedDisciplines.includes(value)) {
+                            $(this).addClass('is-invalid');
+                            isValid = false;
+                        } else {
+                            selectedDisciplines.push(value);
+                            $(this).removeClass('is-invalid');
+                        }
+                    } else {
+                        $(this).removeClass('is-invalid');
+                    }
+                });
+
+                if (!isValid) {
+                    e.preventDefault();
+                    alert('Дисциплины не должны повторяться!');
+                }
+            });
+        });
+    </script>
+}

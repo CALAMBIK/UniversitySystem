@@ -47,149 +47,6 @@ namespace UniversitySystem.Controllers
             return View();
         }
 
-        [HttpGet]
-        public IActionResult Register()
-        {
-            if (_authService.IsAuthenticated())
-            {
-                return RedirectToAction("Profile", "Account");
-            }
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(
-            string login,
-            string password,
-            string confirmPassword,
-            string role,
-            string email,
-            string phone,
-            string secondName,
-            string name,
-            string patronymic,
-            int? groupId = null,
-            int? departamentId = null,
-            DateTime? dateBirthday = null,
-            string academicDegree = null)
-        {
-            // Проверка подтверждения пароля
-            if (password != confirmPassword)
-            {
-                TempData["ErrorMessage"] = "Пароли не совпадают!";
-                return View();
-            }
-
-            // Проверка на минимальную длину пароля
-            if (password.Length < 6)
-            {
-                TempData["ErrorMessage"] = "Пароль должен содержать минимум 6 символов!";
-                return View();
-            }
-
-            // Проверяем, существует ли пользователь с таким логином
-            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Login == login);
-            if (existingUser != null)
-            {
-                TempData["ErrorMessage"] = "Пользователь с таким логином уже существует!";
-                return View();
-            }
-
-            // Проверяем корректность роли
-            if (role != "Student" && role != "Teacher")
-            {
-                TempData["ErrorMessage"] = "Выберите корректную роль!";
-                return View();
-            }
-
-            // Проверяем обязательные поля ФИО
-            if (string.IsNullOrEmpty(secondName) || string.IsNullOrEmpty(name))
-            {
-                TempData["ErrorMessage"] = "Фамилия и имя обязательны для заполнения!";
-                return View();
-            }
-
-            try
-            {
-                // Создаем нового пользователя
-                var user = new User
-                {
-                    Login = login,
-                    Password = password,
-                    Role = role,
-                    CreatedDate = DateTime.Now,
-                    LastLogin = DateTime.Now
-                };
-
-                _context.Users.Add(user);
-                await _context.SaveChangesAsync();
-
-                // Создаем профиль пользователя
-                var profile = new UserProfile
-                {
-                    IdUser = user.IdUser,
-                    Email = email,
-                    Phone = phone,
-                    UpdatedDate = DateTime.Now
-                };
-                _context.UserProfiles.Add(profile);
-                await _context.SaveChangesAsync();
-
-                // Если это студент или преподаватель, создаем соответствующую запись
-                if (role == "Student")
-                {
-                    var student = new Student
-                    {
-                        Login = login,
-                        Password = password,
-                        Name = name,
-                        SecondName = secondName,
-                        Patronymic = patronymic,
-                        PhoneNumber = phone,
-                        IdGroup = groupId,
-                        DateBirthday = dateBirthday
-                    };
-                    _context.Students.Add(student);
-                    await _context.SaveChangesAsync();
-
-                    // Обновляем пользователя с IdStudent
-                    user.IdStudent = student.IdStudent;
-                    await _context.SaveChangesAsync();
-                }
-                else if (role == "Teacher")
-                {
-                    var teacher = new Teacher
-                    {
-                        Login = login,
-                        Password = password,
-                        Name = name,
-                        SecondName = secondName,
-                        Patronymic = patronymic,
-                        PhoneNumber = phone,
-                        IdDepartament = departamentId
-                    };
-                    _context.Teachers.Add(teacher);
-                    await _context.SaveChangesAsync();
-
-                    // Обновляем пользователя с IdTeacher
-                    user.IdTeacher = teacher.IdTeacher;
-                    await _context.SaveChangesAsync();
-                }
-
-                // Автоматически логиним пользователя после регистрации
-                await _authService.Authenticate(login, password);
-
-                TempData["SuccessMessage"] = "Регистрация прошла успешно! Добро пожаловать в систему.";
-                return RedirectToAction("Profile", "Account");
-            }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = $"Ошибка при регистрации: {ex.Message}";
-                return View();
-            }
-        }
-
         public IActionResult Logout()
         {
             _authService.Logout();
@@ -210,7 +67,6 @@ namespace UniversitySystem.Controllers
             ViewBag.UserName = _authService.GetUserName();
             ViewBag.UserRole = userRole;
 
-            // Получаем пользователя с включенными связанными данными
             var user = await _context.Users
                 .Include(u => u.Student)
                     .ThenInclude(s => s.Group)
@@ -219,39 +75,56 @@ namespace UniversitySystem.Controllers
                     .ThenInclude(t => t.Departament)
                 .FirstOrDefaultAsync(u => u.IdUser == userId);
 
-            // Получаем профиль пользователя отдельно
             var userProfile = await _context.UserProfiles
                 .FirstOrDefaultAsync(p => p.IdUser == userId);
 
             if (user != null)
             {
-                // Получаем дополнительные данные в зависимости от роли
                 if (userRole == "Student" && user.IdStudent.HasValue)
                 {
                     ViewBag.UserData = user.Student;
-                    // Получаем статистику запросов материалов
-                    ViewBag.PendingRequestsCount = await _context.MaterialRequests
-                        .CountAsync(r => r.IdUser == userId && r.Status == "Pending");
-                    ViewBag.CompletedRequestsCount = await _context.MaterialRequests
-                        .CountAsync(r => r.IdUser == userId && r.Status == "Completed");
+
+                    if (user.Student.IdGroup.HasValue)
+                    {
+                        ViewBag.CourseMaterials = await _context.CourseMaterials
+                            .Include(cm => cm.Teacher)
+                            .Include(cm => cm.Discipline)
+                            .Where(cm => cm.IdGroup == user.Student.IdGroup)
+                            .OrderByDescending(cm => cm.CreatedDate)
+                            .Take(5)
+                            .ToListAsync();
+
+                        ViewBag.Disciplines = await _context.CourseMaterials
+                            .Where(cm => cm.IdGroup == user.Student.IdGroup)
+                            .Select(cm => cm.Discipline)
+                            .Distinct()
+                            .ToListAsync();
+                    }
                 }
                 else if (userRole == "Teacher" && user.IdTeacher.HasValue)
                 {
                     ViewBag.UserData = user.Teacher;
-                    // Получаем статистику запросов материалов
-                    ViewBag.PendingRequestsCount = await _context.MaterialRequests
-                        .CountAsync(r => r.IdUser == userId && r.Status == "Pending");
-                    ViewBag.CompletedRequestsCount = await _context.MaterialRequests
-                        .CountAsync(r => r.IdUser == userId && r.Status == "Completed");
+
+                    ViewBag.CourseMaterials = await _context.CourseMaterials
+                        .Include(cm => cm.Group)
+                        .Include(cm => cm.Discipline)
+                        .Where(cm => cm.IdTeacher == user.IdTeacher)
+                        .OrderByDescending(cm => cm.CreatedDate)
+                        .Take(5)
+                        .ToListAsync();
+
+                    ViewBag.TeacherDisciplines = await _context.TeacherDisciplines
+                        .Include(td => td.Discipline)
+                        .Include(td => td.Group)
+                        .Where(td => td.IdTeacher == user.IdTeacher)
+                        .ToListAsync();
                 }
                 else if (userRole == "Admin")
                 {
                     ViewBag.StudentsCount = await _context.Students.CountAsync();
                     ViewBag.TeachersCount = await _context.Teachers.CountAsync();
                     ViewBag.GroupsCount = await _context.StudentGroups.CountAsync();
-                    ViewBag.PendingRequestsCount = await _context.MaterialRequests
-                        .CountAsync(r => r.Status == "Pending");
-                    ViewBag.TotalRequestsCount = await _context.MaterialRequests.CountAsync();
+                    ViewBag.MaterialsCount = await _context.CourseMaterials.CountAsync();
                 }
 
                 ViewBag.UserProfile = userProfile;
@@ -498,11 +371,43 @@ namespace UniversitySystem.Controllers
                     _context.UserProfiles.Remove(profile);
                 }
 
-                // Удаляем запросы материалов пользователя
-                var requests = await _context.MaterialRequests.Where(r => r.IdUser == currentUserId).ToListAsync();
-                if (requests.Any())
+                // Удаляем учебные материалы, если пользователь - преподаватель
+                if (user.IdTeacher.HasValue)
                 {
-                    _context.MaterialRequests.RemoveRange(requests);
+                    var materials = await _context.CourseMaterials
+                        .Where(m => m.IdTeacher == user.IdTeacher.Value)
+                        .ToListAsync();
+                    if (materials.Any())
+                    {
+                        _context.CourseMaterials.RemoveRange(materials);
+                    }
+
+                    // Удаляем связи преподавателя с дисциплинами
+                    var teacherDisciplines = await _context.TeacherDisciplines
+                        .Where(td => td.IdTeacher == user.IdTeacher.Value)
+                        .ToListAsync();
+                    if (teacherDisciplines.Any())
+                    {
+                        _context.TeacherDisciplines.RemoveRange(teacherDisciplines);
+                    }
+                }
+
+                // Удаляем запись студента или преподавателя
+                if (user.Role == "Student" && user.IdStudent.HasValue)
+                {
+                    var student = await _context.Students.FindAsync(user.IdStudent.Value);
+                    if (student != null)
+                    {
+                        _context.Students.Remove(student);
+                    }
+                }
+                else if (user.Role == "Teacher" && user.IdTeacher.HasValue)
+                {
+                    var teacher = await _context.Teachers.FindAsync(user.IdTeacher.Value);
+                    if (teacher != null)
+                    {
+                        _context.Teachers.Remove(teacher);
+                    }
                 }
 
                 // Удаляем пользователя
@@ -519,6 +424,179 @@ namespace UniversitySystem.Controllers
             catch (Exception ex)
             {
                 TempData["ErrorMessage"] = $"Ошибка при удалении аккаунта: {ex.Message}";
+                return View();
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> RegisterUser()
+        {
+            if (!_authService.IsAuthenticated() || _authService.GetUserRole() != "Admin")
+                return RedirectToAction("AccessDenied", "Account");
+
+            ViewBag.Groups = await _context.StudentGroups
+                .Include(g => g.Departament)
+                .OrderBy(g => g.NumberGroup)
+                .ToListAsync();
+            ViewBag.Departaments = await _context.Departaments
+                .OrderBy(d => d.Name)
+                .ToListAsync();
+            ViewBag.Disciplines = await _context.Disciplines
+                .OrderBy(d => d.Name)
+                .ToListAsync();
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RegisterUser(
+            string login,
+            string password,
+            string confirmPassword,
+            string role,
+            string email,
+            string phone,
+            string secondName,
+            string name,
+            string patronymic = null,
+            int? groupId = null,
+            int? departamentId = null,
+            DateTime? dateBirthday = null,
+            List<int> disciplineIds = null)
+        {
+            if (!_authService.IsAuthenticated() || _authService.GetUserRole() != "Admin")
+                return RedirectToAction("AccessDenied", "Account");
+
+            // Валидация
+            if (password != confirmPassword)
+            {
+                TempData["ErrorMessage"] = "Пароли не совпадают!";
+                return RedirectToAction("RegisterUser");
+            }
+
+            if (password.Length < 6)
+            {
+                TempData["ErrorMessage"] = "Пароль должен содержать минимум 6 символов!";
+                return RedirectToAction("RegisterUser");
+            }
+
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Login == login);
+            if (existingUser != null)
+            {
+                TempData["ErrorMessage"] = "Пользователь с таким логином уже существует!";
+                return RedirectToAction("RegisterUser");
+            }
+
+            if (role != "Student" && role != "Teacher")
+            {
+                TempData["ErrorMessage"] = "Выберите корректную роль!";
+                return RedirectToAction("RegisterUser");
+            }
+
+            if (string.IsNullOrEmpty(secondName) || string.IsNullOrEmpty(name))
+            {
+                TempData["ErrorMessage"] = "Фамилия и имя обязательны для заполнения!";
+                return RedirectToAction("RegisterUser");
+            }
+
+            try
+            {
+                // Создаем пользователя
+                var user = new User
+                {
+                    Login = login,
+                    Password = password,
+                    Role = role,
+                    CreatedDate = DateTime.Now,
+                    LastLogin = DateTime.Now
+                };
+
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+
+                // Создаем профиль
+                var profile = new UserProfile
+                {
+                    IdUser = user.IdUser,
+                    Email = email,
+                    Phone = phone,
+                    UpdatedDate = DateTime.Now
+                };
+                _context.UserProfiles.Add(profile);
+
+                // Создаем запись студента или преподавателя
+                if (role == "Student")
+                {
+                    var student = new Student
+                    {
+                        Login = login,
+                        Password = password,
+                        Name = name,
+                        SecondName = secondName,
+                        Patronymic = patronymic,
+                        PhoneNumber = phone,
+                        IdGroup = groupId,
+                        DateBirthday = dateBirthday
+                    };
+                    _context.Students.Add(student);
+                    await _context.SaveChangesAsync();
+
+                    user.IdStudent = student.IdStudent;
+                }
+                else if (role == "Teacher")
+                {
+                    var teacher = new Teacher
+                    {
+                        Login = login,
+                        Password = password,
+                        Name = name,
+                        SecondName = secondName,
+                        Patronymic = patronymic,
+                        PhoneNumber = phone,
+                        IdDepartament = departamentId
+                    };
+                    _context.Teachers.Add(teacher);
+                    await _context.SaveChangesAsync();
+
+                    user.IdTeacher = teacher.IdTeacher;
+
+                    // Добавляем дисциплины преподавателю
+                    if (disciplineIds != null && disciplineIds.Any())
+                    {
+                        foreach (var disciplineId in disciplineIds)
+                        {
+                            var teacherDiscipline = new TeacherDiscipline
+                            {
+                                IdTeacher = teacher.IdTeacher,
+                                IdDiscipline = disciplineId
+                            };
+                            _context.TeacherDisciplines.Add(teacherDiscipline);
+                        }
+                        await _context.SaveChangesAsync();
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = $"Пользователь {secondName} {name} успешно зарегистрирован!";
+                return RedirectToAction("AdminDashboard", "Home");
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Ошибка при регистрации: {ex.Message}";
+
+                ViewBag.Groups = await _context.StudentGroups
+                    .Include(g => g.Departament)
+                    .OrderBy(g => g.NumberGroup)
+                    .ToListAsync();
+                ViewBag.Departaments = await _context.Departaments
+                    .OrderBy(d => d.Name)
+                    .ToListAsync();
+                ViewBag.Disciplines = await _context.Disciplines
+                    .OrderBy(d => d.Name)
+                    .ToListAsync();
+
                 return View();
             }
         }

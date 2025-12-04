@@ -18,12 +18,10 @@ namespace UniversitySystem.Middleware
 
             var publicPaths = new[]
             {
+                "/",
                 "/Account/Login",
                 "/Home/Login",
-                "/Account/Register",
                 "/Home/Index",
-                "/Home/About",
-                "/Home/Contact",
                 "/Home/News",
                 "/Home/Promotions",
                 "/Home/NewsDetails",
@@ -36,8 +34,7 @@ namespace UniversitySystem.Middleware
             };
 
             bool isPublicPath = publicPaths.Any(p =>
-                path.StartsWithSegments(p, StringComparison.OrdinalIgnoreCase) ||
-                path.Value?.Contains(p) == true);
+                path.StartsWithSegments(p, StringComparison.OrdinalIgnoreCase));
 
             if (!isPublicPath && context.Session.GetString("UserId") == null)
             {

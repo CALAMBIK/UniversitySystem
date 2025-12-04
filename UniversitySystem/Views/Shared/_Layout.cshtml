@@ -25,136 +25,354 @@
         .footer {
             background-color: #343a40;
         }
+
+        /* Стиль для страницы логина */
+        .login-page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+            .login-page main {
+                flex: 1;
+            }
+
+        /* Стили для главной страницы неавторизованных пользователей */
+        .guest-home-page {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .guest-content {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .guest-title {
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .university-name {
+            color: #667eea;
+            display: block;
+            font-size: 1.8rem;
+            margin-top: 10px;
+        }
+
+        .lead-text {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            text-align: center;
+            color: #555;
+            margin-bottom: 40px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid #e9ecef;
+        }
+
+            .feature-card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+                border-color: #667eea;
+            }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 20px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feature-card h4 {
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .feature-card p {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .advantages-list {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 40px 0;
+        }
+
+            .advantages-list h3 {
+                text-align: center;
+                margin-bottom: 25px;
+                color: #333;
+                font-weight: 600;
+            }
+
+        .list-group-item {
+            border: none;
+            background: transparent;
+            padding: 12px 20px;
+            font-size: 1.1rem;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 18px 50px;
+            font-size: 1.3rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 50px auto 30px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+            .login-btn:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+                color: white;
+            }
+
+        .support-info {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+            color: #777;
+        }
+
+            .support-info a {
+                color: #667eea;
+                text-decoration: none;
+                font-weight: 500;
+            }
+
+                .support-info a:hover {
+                    text-decoration: underline;
+                }
+
+        /* Стили для скрытия навигации */
+        .hide-header-footer .navbar,
+        .hide-header-footer .footer {
+            display: none !important;
+        }
+
+        .hide-header-footer .container {
+            max-width: 100%;
+            padding: 0;
+        }
+
+        .hide-header-footer main {
+            padding: 0;
+        }
     </style>
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Учебная система</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Главная</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Students" asp-action="Index">Студенты</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Teachers" asp-action="Index">Преподаватели</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="News">Новости</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="About">О системе</a>
-                        </li>
-                        @if (Context.Session.GetString("UserId") != null && Context.Session.GetString("UserRole") != "Admin")
-                        {
+@{
+        // Определяем переменные ДО использования их в body и ниже
+        var isLoginPage = ViewContext.RouteData.Values["Controller"]?.ToString() == "Account" &&
+                                            ViewContext.RouteData.Values["Action"]?.ToString() == "Login";
+        var userId = Context.Session.GetString("UserId");
+        var isGuestHome = userId == null &&
+                                            ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" &&
+                                            ViewContext.RouteData.Values["Action"]?.ToString() == "Index";
+
+        // Определяем, нужно ли скрывать header/footer
+        var shouldHideHeaderFooter = isLoginPage || isGuestHome;
+
+        // Определяем классы для body
+        var bodyClasses = new List<string>();
+
+        if (shouldHideHeaderFooter)
+        {
+                bodyClasses.Add("hide-header-footer");
+        }
+
+        if (isLoginPage)
+        {
+                bodyClasses.Add("login-page");
+        }
+        else if (isGuestHome)
+        {
+                bodyClasses.Add("guest-home-page");
+        }
+}
+<body class="@string.Join(" ", bodyClasses)">
+
+    @if (!isLoginPage && !isGuestHome)
+    {
+        <!-- Отображаем навигацию только НЕ на странице логина и НЕ на гостевой главной -->
+        <header>
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
+                <div class="container-fluid">
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Учебная система</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
                             <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="MaterialRequests" asp-action="MyRequests">
-                                    Мои запросы
-                                </a>
+                                <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Главная</a>
                             </li>
-                        }
-                        @if (Context.Session.GetString("UserId") != null && Context.Session.GetString("UserRole") == "Admin")
-                        {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown">
-                                     Администрирование
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a class="dropdown-item" href="@Url.Action("AdminDashboard", "Home")">
-                                             Панель управления
-                                        </a>
-                                    </li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li>
-                                        <a class="dropdown-item" href="@Url.Action("Admin", "News")">
-                                           Управление новостями
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="@Url.Action("Admin", "MaterialRequests")">
-                                             Управление запросами
-                                        </a>
-                                    </li>
-                                </ul>
+
+                            <!-- Ссылки только для администраторов -->
+                            @if (Context.Session.GetString("UserId") != null && Context.Session.GetString("UserRole") == "Admin")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="Students" asp-action="Index">Студенты</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="Teachers" asp-action="Index">Преподаватели</a>
+                                </li>
+                            }
+
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="News">Новости</a>
                             </li>
-                        }
-                    </ul>
-                    <ul class="navbar-nav">
-                        @if (Context.Session.GetString("UserId") != null)
-                        {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown">
-                                    @Context.Session.GetString("UserName")
-                                    @if (Context.Session.GetString("UserRole") == "Admin")
-                                    {
-                                        <span class="badge bg-danger">Админ</span>
-                                    }
-                                    else if (Context.Session.GetString("UserRole") == "Teacher")
-                                    {
-                                        <span class="badge bg-success">Преподаватель</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-info">Студент</span>
-                                    }
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a class="dropdown-item" href="@Url.Action("Profile", "Account")">
-                                             Личный кабинет
-                                        </a>
-                                    </li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li>
-                                        <a class="dropdown-item" href="@Url.Action("EditProfile", "Account")">
-                                             Редактировать профиль
-                                        </a>
-                                    </li>
-                                    @if (Context.Session.GetString("UserRole") == "Admin")
-                                    {
+                          
+                            @if (Context.Session.GetString("UserId") != null && Context.Session.GetString("UserRole") == "Student")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="CourseMaterials" asp-action="Index">
+                                        Учебные материалы
+                                    </a>
+                                </li>
+                            }
+
+                            <!-- Ссылки для преподавателей -->
+                            @if (Context.Session.GetString("UserId") != null && Context.Session.GetString("UserRole") == "Teacher")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="CourseMaterials" asp-action="TeacherMaterials">
+                                        Мои материалы
+                                    </a>
+                                </li>
+                            }
+
+                            <!-- Меню администратора -->
+                            @if (Context.Session.GetString("UserId") != null && Context.Session.GetString("UserRole") == "Admin")
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown">
+                                        Администрирование
+                                    </a>
+                                    <ul class="dropdown-menu">
                                         <li>
                                             <a class="dropdown-item" href="@Url.Action("AdminDashboard", "Home")">
-                                                 Панель администратора
+                                                Панель управления
                                             </a>
                                         </li>
                                         <li><hr class="dropdown-divider"></li>
-                                    }
-                                    <li>
-                                        <a class="dropdown-item" href="@Url.Action("Logout", "Account")">
-                                             Выйти
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="Login">
-                                     Вход
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="Register">
-                                    Регистрация
-                                </a>
-                            </li>
-                        }
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
+                                        <li>
+                                            <a class="dropdown-item" href="@Url.Action("RegisterUser", "Account")">
+                                                Зарегистрировать пользователя
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="@Url.Action("Admin", "News")">
+                                                Управление новостями
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            }
+                        </ul>
 
+                        <!-- Правая часть навигации -->
+                        <ul class="navbar-nav">
+                            @if (Context.Session.GetString("UserId") != null)
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown">
+                                        @Context.Session.GetString("UserName")
+                                        @if (Context.Session.GetString("UserRole") == "Admin")
+                                        {
+                                            <span class="badge bg-danger ms-1">Админ</span>
+                                        }
+                                        else if (Context.Session.GetString("UserRole") == "Teacher")
+                                        {
+                                            <span class="badge bg-success ms-1">Преподаватель</span>
+                                        }
+                                        else if (Context.Session.GetString("UserRole") == "Student")
+                                        {
+                                            <span class="badge bg-info ms-1">Студент</span>
+                                        }
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li>
+                                            <a class="dropdown-item" href="@Url.Action("Profile", "Account")">
+                                                <i class="fas fa-user me-2"></i>Личный кабинет
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="@Url.Action("EditProfile", "Account")">
+                                                <i class="fas fa-edit me-2"></i>Редактировать профиль
+                                            </a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        @if (Context.Session.GetString("UserRole") == "Admin")
+                                        {
+                                            <li>
+                                                <a class="dropdown-item" href="@Url.Action("AdminDashboard", "Home")">
+                                                    <i class="fas fa-cog me-2"></i>Панель администратора
+                                                </a>
+                                            </li>
+                                            <li><hr class="dropdown-divider"></li>
+                                        }
+                                        <li>
+                                            <a class="dropdown-item" href="@Url.Action("Logout", "Account")">
+                                                <i class="fas fa-sign-out-alt me-2"></i>Выйти
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="Login">
+                                        <i class="fas fa-sign-in-alt me-1"></i>Вход
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+    }
+
+    <!-- Контейнер и RenderBody всегда присутствуют -->
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()

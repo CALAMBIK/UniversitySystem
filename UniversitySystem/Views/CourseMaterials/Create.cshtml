@@ -1,0 +1,187 @@
+﻿@model UniversitySystem.Models.CourseMaterial
+
+@{
+    ViewData["Title"] = "Создание учебного материала";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card bg-success text-white mb-4">
+                <div class="card-body">
+                    <h1 class="card-title">Создание учебного материала</h1>
+                    <p class="card-text">Добавьте новый материал для ваших студентов</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-body">
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger">
+                            @TempData["ErrorMessage"]
+                        </div>
+                    }
+
+                    <form asp-action="Create">
+                        @Html.AntiForgeryToken()
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Title" class="form-label">Название материала *</label>
+                            <input asp-for="Title" class="form-control" placeholder="Введите название материала" />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label">Описание *</label>
+                            <textarea asp-for="Description" class="form-control" rows="4"
+                                      placeholder="Подробное описание материала"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="IdGroup" class="form-label">Группа *</label>
+                                <select asp-for="IdGroup" class="form-control" required>
+                                    <option value="">Выберите группу</option>
+                                    @foreach (var group in ViewBag.Groups)
+                                    {
+                                        <option value="@group.IdGroup">Группа @group.NumberGroup</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="IdGroup" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="IdDiscipline" class="form-label">Дисциплина *</label>
+                                <select asp-for="IdDiscipline" class="form-control" required>
+                                    <option value="">Выберите дисциплину</option>
+                                    @if (ViewBag.TeacherDisciplines != null)
+                                    {
+                                        foreach (var td in ViewBag.TeacherDisciplines)
+                                        {
+                                            if (td.Group?.IdGroup != null)
+                                            {
+                                                <option value="@td.Discipline.IdDiscipline"
+                                                        data-group="@td.Group.IdGroup">
+                                                    @td.Discipline.Name (Группа @td.Group.NumberGroup)
+                                                </option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                                <span asp-validation-for="IdDiscipline" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                Создать материал
+                            </button>
+                            <a href="@Url.Action("TeacherMaterials")" class="btn btn-outline-secondary">
+                                Отмена
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Информация</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Ваши дисциплины и группы:</strong></p>
+                    <ul class="list-group">
+                        @if (ViewBag.TeacherDisciplines != null && ViewBag.TeacherDisciplines.Count > 0)
+                        {
+                            foreach (var td in ViewBag.TeacherDisciplines)
+                            {
+                                <li class="list-group-item">
+                                    <strong>@td.Discipline?.Name</strong>
+                                    @if (td.Group != null)
+                                    {
+                                        <span class="badge bg-primary">Группа @td.Group.NumberGroup</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning">Группа не назначена</span>
+                                    }
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li class="list-group-item text-muted">У вас нет назначенных дисциплин</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Фильтруем дисциплины в зависимости от выбранной группы
+            $('#IdGroup').change(function() {
+                var selectedGroup = $(this).val();
+                $('#IdDiscipline option').each(function() {
+                    var $option = $(this);
+                    var groupId = $option.data('group');
+
+                    if (!groupId || groupId == selectedGroup) {
+                        $option.show();
+                    } else {
+                        $option.hide();
+                    }
+                });
+
+                // Сбрасываем выбор дисциплины если она не доступна для выбранной группы
+                var selectedDiscipline = $('#IdDiscipline').val();
+                var $selectedOption = $('#IdDiscipline option[value="' + selectedDiscipline + '"]');
+                if (selectedDiscipline && !$selectedOption.is(':visible')) {
+                    $('#IdDiscipline').val('');
+                }
+            });
+
+            // При выборе дисциплины автоматически выбираем соответствующую группу
+            $('#IdDiscipline').change(function() {
+                var $selectedOption = $('#IdDiscipline option:selected');
+                var groupId = $selectedOption.data('group');
+                if (groupId) {
+                    $('#IdGroup').val(groupId);
+                }
+            });
+
+            $('form').on('submit', function(e) {
+                let isValid = true;
+
+                $('input[required], select[required], textarea[required]').each(function() {
+                    if ($(this).val().trim() === '') {
+                        $(this).addClass('is-invalid');
+                        isValid = false;
+                    } else {
+                        $(this).removeClass('is-invalid');
+                    }
+                });
+
+                if (!isValid) {
+                    e.preventDefault();
+                    alert('Пожалуйста, заполните все обязательные поля.');
+                }
+            });
+
+            $('input, select, textarea').on('input change', function() {
+                $(this).removeClass('is-invalid');
+            });
+        });
+    </script>
+}

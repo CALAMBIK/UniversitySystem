@@ -1,162 +1,145 @@
 ﻿@{
     ViewData["Title"] = "Главная страница";
-    var latestNews = ViewBag.LatestNews as IEnumerable<UniversitySystem.Models.News>;
 }
 
 <div class="container">
     <div class="text-center mb-5">
-        <h1 class="display-4">Добро пожаловать в Учебную Систему ВУЗа!</h1>
-        <p class="lead">Современная система управления учебным процессом</p>
+        <h1 class="display-4 mb-4">Добро пожаловать в Национальный Университет Технологий и Инноваций</h1>
+        <p class="lead text-muted">Современное образование для будущих лидеров цифровой эпохи</p>
     </div>
-
-    @if (TempData["Message"] != null)
-    {
-        <div class="row justify-content-center mb-3">
-            <div class="col-lg-10">
-                <div class="alert alert-success">
-                    <strong>Успех!</strong> @TempData["Message"]
-                </div>
-            </div>
-        </div>
-    }
-
-    @if (TempData["Error"] != null)
-    {
-        <div class="row justify-content-center mb-3">
-            <div class="col-lg-10">
-                <div class="alert alert-danger">
-                    <strong>Ошибка!</strong> @TempData["Error"]
-                </div>
-            </div>
-        </div>
-    }
 
     <div class="row justify-content-center mb-5">
-        <div class="col-lg-8">
-            <div class="row justify-content-center">
-                <div class="col-md-5 mb-4">
-                    <div class="card h-100 text-center">
-                        <div class="card-body">
-                            <h5 class="card-title">Студенты</h5>
-                            <p class="card-text">Управление информацией о студентах и успеваемости</p>
-                            <a href="@Url.Action("Index", "Students")" class="btn btn-primary">Перейти</a>
-                        </div>
+        <div class="col-lg-10">
+            <div class="card shadow-sm">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <h2 class="text-primary">О нашем университете</h2>
                     </div>
-                </div>
-                <div class="col-md-5 mb-4">
-                    <div class="card h-100 text-center">
-                        <div class="card-body">
-                            <h5 class="card-title">Преподаватели</h5>
-                            <p class="card-text">Информация о преподавательском составе</p>
-                            <a href="@Url.Action("Index", "Teachers")" class="btn btn-success">Перейти</a>
-                        </div>
-                    </div>
+
+                    <p class="fs-5 text-justify mb-4">
+                        Национальный Университет Технологий и Инноваций — это ведущее высшее учебное заведение,
+                        объединяющее лучшие традиции классического образования с передовыми технологиями
+                        и инновационными подходами к обучению. Наш университет был основан в 1995 году и с тех пор
+                        завоевал репутацию одного из самых прогрессивных учебных заведений страны.
+                    </p>
+
+                    <p class="fs-5 text-justify mb-4">
+                        Мы стремимся к тому, чтобы каждый студент мог раскрыть свой потенциал, получить
+                        качественное образование и стать востребованным специалистом в выбранной области.
+                        Наши выпускники успешно работают в ведущих компаниях страны и за рубежом,
+                        внося значительный вклад в развитие науки, технологий и бизнеса.
+                    </p>
                 </div>
             </div>
         </div>
     </div>
-
-    @if (latestNews != null && latestNews.Any())
-    {
-        <div class="row justify-content-center mb-5">
-            <div class="col-lg-10">
-                <div class="card">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">Последние новости</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            @foreach (var news in latestNews)
-                            {
-                                <div class="col-md-4 mb-3">
-                                    <div class="card h-100">
-                                        <div class="card-body">
-                                            <h6 class="card-title">@news.Title</h6>
-                                            <p class="card-text small">
-                                                @if (news.Content.Length > 80)
-                                                {
-                                                    @news.Content.Substring(0, 80)
-                                        
-                                                    @:...
-                                                }
-                                                else
-                                                {
-                                                    @news.Content
-                                                }
-                                            </p>
-                                        </div>
-                                        <div class="card-footer bg-transparent">
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <small class="text-muted">@news.PublishDate?.ToString("dd.MM.yyyy")</small>
-                                                <a href="@Url.Action("NewsDetails", new { id = news.IdNews })" class="btn btn-sm btn-outline-primary">Читать</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                        <div class="text-center mt-3">
-                            <a href="@Url.Action("News")" class="btn btn-outline-primary">Все новости</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
 
     <div class="row justify-content-center">
         <div class="col-lg-10">
-            <div class="row">
-                <div class="col-md-6 mb-4">
-                    <div class="card h-100">
-                        <div class="card-header bg-dark text-white">
-                            <h5 class="mb-0">Статистика вуза</h5>
+            <div class="card shadow-sm">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <h2 class="text-info">Направления подготовки</h2>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-4">
+                            <div class="text-center p-3 border rounded h-100">
+                                <div class="mb-3">
+                                    <i class="fas fa-laptop-code fa-3x text-primary"></i>
+                                </div>
+                                <h4 class="text-primary">Информационные технологии</h4>
+                                <p class="text-muted">
+                                    Программирование, кибербезопасность, искусственный интеллект,
+                                    веб-разработка и анализ данных
+                                </p>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <div class="list-group list-group-flush">
-                                <div class="list-group-item d-flex justify-content-between align-items-center">
-                                    Студенты
-                                    <span class="badge bg-primary rounded-pill">@ViewBag.StudentsCount</span>
+
+                        <div class="col-md-4 mb-4">
+                            <div class="text-center p-3 border rounded h-100">
+                                <div class="mb-3">
+                                    <i class="fas fa-chart-line fa-3x text-success"></i>
                                 </div>
-                                <div class="list-group-item d-flex justify-content-between align-items-center">
-                                    Преподаватели
-                                    <span class="badge bg-success rounded-pill">@ViewBag.TeacherCount</span>
+                                <h4 class="text-success">Экономика и управление</h4>
+                                <p class="text-muted">
+                                    Финансы, маркетинг, менеджмент, бизнес-аналитика и
+                                    предпринимательство
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-4">
+                            <div class="text-center p-3 border rounded h-100">
+                                <div class="mb-3">
+                                    <i class="fas fa-flask fa-3x text-info"></i>
                                 </div>
-                                <div class="list-group-item d-flex justify-content-between align-items-center">
-                                    Учебные группы
-                                    <span class="badge bg-warning rounded-pill">@ViewBag.GroupsCount</span>
+                                <h4 class="text-info">Естественные науки</h4>
+                                <p class="text-muted">
+                                    Физика, химия, биотехнологии, экология и
+                                    материаловедение
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-4">
+                            <div class="text-center p-3 border rounded h-100">
+                                <div class="mb-3">
+                                    <i class="fas fa-cogs fa-3x text-warning"></i>
                                 </div>
-                                <div class="list-group-item d-flex justify-content-between align-items-center">
-                                    Кафедры
-                                    <span class="badge bg-info rounded-pill">@ViewBag.DepartamentsCount</span>
+                                <h4 class="text-warning">Технические науки</h4>
+                                <p class="text-muted">
+                                    Машиностроение, строительство, энергетика и
+                                    робототехника
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-4">
+                            <div class="text-center p-3 border rounded h-100">
+                                <div class="mb-3">
+                                    <i class="fas fa-graduation-cap fa-3x text-secondary"></i>
                                 </div>
-                                <div class="list-group-item d-flex justify-content-between align-items-center">
-                                    Дисциплины
-                                    <span class="badge bg-secondary rounded-pill">@ViewBag.DisciplineCount</span>
+                                <h4 class="text-secondary">Гуманитарные науки</h4>
+                                <p class="text-muted">
+                                    Лингвистика, психология, социология, философия и
+                                    международные отношения
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-4">
+                            <div class="text-center p-3 border rounded h-100">
+                                <div class="mb-3">
+                                    <i class="fas fa-palette fa-3x text-danger"></i>
                                 </div>
+                                <h4 class="text-danger">Дизайн и искусство</h4>
+                                <p class="text-muted">
+                                    Графический дизайн, цифровые медиа, архитектура и
+                                    визуальные искусства
+                                </p>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 mb-4">
-                    <div class="card h-100">
-                        <div class="card-header bg-secondary text-white">
-                            <h5 class="mb-0">Быстрый доступ</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="d-grid gap-2">
-                                <a href="@Url.Action("Login", "Account")" class="btn btn-outline-primary">
-                                    Вход в систему
-                                </a>
-                                <a href="@Url.Action("About")" class="btn btn-outline-info">
-                                    О системе
-                                </a>
-                                <a href="@Url.Action("News")" class="btn btn-outline-success">
-                                    Новости
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-5">
+        <div class="col-lg-8">
+            <div class="card bg-light">
+                <div class="card-body text-center p-4">
+                    <h3 class="text-dark mb-3">Наша миссия</h3>
+                    <p class="fs-5 text-dark mb-0">
+                        <i class="fas fa-quote-left text-primary me-2"></i>
+                        Формировать новое поколение профессионалов, способных решать сложные задачи
+                        в условиях быстро меняющегося мира, развивать науку и технологии,
+                        вносить вклад в процветание общества
+                        <i class="fas fa-quote-right text-primary ms-2"></i>
+                    </p>
                 </div>
             </div>
         </div>

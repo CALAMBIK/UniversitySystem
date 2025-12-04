@@ -134,6 +134,13 @@
                                        class="btn btn-info btn-sm" title="Подробнее">
                                         Подробнее
                                     </a>
+                                    <form method="post" action="@Url.Action("Delete", new { id = item.IdStudent })"
+                                          style="display: inline;" onsubmit="return confirm('Удалить студента @item.SecondName @item.Name?')">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-danger btn-sm" title="Удалить">
+                                            Удалить
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         }

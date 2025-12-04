@@ -1,0 +1,76 @@
+﻿@model IEnumerable<UniversitySystem.Models.CourseMaterial>
+
+@{
+    ViewData["Title"] = "Мои учебные материалы";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card bg-success text-white mb-4">
+                <div class="card-body">
+                    <h1 class="card-title">Мои учебные материалы</h1>
+                    <p class="card-text">Все материалы, которые вы создали для студентов</p>
+                    <a href="@Url.Action("Create")" class="btn btn-light">
+                        <i class="fas fa-plus"></i> Создать новый материал
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            @if (Model.Any())
+            {
+                <div class="row">
+                    @foreach (var material in Model)
+                    {
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">@material.Title</h5>
+                                    <form method="post" action="@Url.Action("Delete", new { id = material.IdMaterial })"
+                                          style="display: inline;"
+                                          onsubmit="return confirm('Удалить материал?')">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text">@material.Description</p>
+                                    <p class="card-text">
+                                        <small class="text-muted">
+                                            <strong>Группа:</strong> <span class="badge bg-primary">@material.Group?.NumberGroup</span><br>
+                                            <strong>Дисциплина:</strong> @material.Discipline?.Name<br>
+                                            <strong>Дата создания:</strong> @material.CreatedDate.ToString("dd.MM.yyyy HH:mm")<br>
+                                            <strong>Количество символов:</strong> @material.Description.Length
+                                        </small>
+                                    </p>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="@Url.Action("Details", new { id = material.IdMaterial })"
+                                       class="btn btn-info btn-sm">
+                                        <i class="fas fa-eye"></i> Подробнее
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning text-center">
+                    <h5>У вас пока нет учебных материалов</h5>
+                    <p>Создайте свой первый материал для студентов</p>
+                    <a href="@Url.Action("Create")" class="btn btn-success">
+                        <i class="fas fa-plus"></i> Создать первый материал
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

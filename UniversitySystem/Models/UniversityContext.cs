@@ -15,8 +15,9 @@ namespace UniversitySystem.Data
         public DbSet<User> Users { get; set; }
         public DbSet<News> News { get; set; }
         public DbSet<Promotion> Promotions { get; set; }
-        public DbSet<MaterialRequest> MaterialRequests { get; set; }
         public DbSet<UserProfile> UserProfiles { get; set; }
+        public DbSet<CourseMaterial> CourseMaterials { get; set; }
+        public DbSet<TeacherDiscipline> TeacherDisciplines { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -55,12 +56,32 @@ namespace UniversitySystem.Data
                     .HasForeignKey(u => u.IdTeacher);
             });
 
-            modelBuilder.Entity<MaterialRequest>(entity =>
+            modelBuilder.Entity<CourseMaterial>(entity =>
             {
-                entity.HasKey(e => e.IdRequest);
-                entity.HasOne(m => m.User)
+                entity.HasKey(e => e.IdMaterial);
+                entity.HasOne(m => m.Teacher)
                     .WithMany()
-                    .HasForeignKey(m => m.IdUser);
+                    .HasForeignKey(m => m.IdTeacher);
+                entity.HasOne(m => m.Group)
+                    .WithMany()
+                    .HasForeignKey(m => m.IdGroup);
+                entity.HasOne(m => m.Discipline)
+                    .WithMany()
+                    .HasForeignKey(m => m.IdDiscipline);
+            });
+
+            modelBuilder.Entity<TeacherDiscipline>(entity =>
+            {
+                entity.HasKey(e => e.IdTeacherDiscipline);
+                entity.HasOne(td => td.Teacher)
+                    .WithMany()
+                    .HasForeignKey(td => td.IdTeacher);
+                entity.HasOne(td => td.Discipline)
+                    .WithMany()
+                    .HasForeignKey(td => td.IdDiscipline);
+                entity.HasOne(td => td.Group)
+                    .WithMany()
+                    .HasForeignKey(td => td.IdGroup);
             });
 
             modelBuilder.Entity<UserProfile>(entity =>

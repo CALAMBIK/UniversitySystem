@@ -1,13 +1,13 @@
 ﻿@{
-    ViewData["Title"] = "Регистрация";
+    ViewData["Title"] = "Регистрация нового пользователя";
 }
 
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-10">
             <div class="card shadow">
-                <div class="card-header bg-success text-white text-center">
-                    <h3 class="mb-0"> Регистрация в системе</h3>
+                <div class="card-header bg-success text-white">
+                    <h3 class="mb-0">Регистрация нового пользователя</h3>
                 </div>
                 <div class="card-body">
                     @if (TempData["ErrorMessage"] != null)
@@ -18,11 +18,11 @@
                     }
 
                     <form method="post">
+                        @Html.AntiForgeryToken()
+
                         <div class="row mb-4">
                             <div class="col-12">
-                                <h5 class="text-primary">
-                                     Личные данные
-                                </h5>
+                                <h5 class="text-primary">Личные данные</h5>
                                 <hr>
                             </div>
                         </div>
@@ -47,9 +47,7 @@
 
                         <div class="row mb-4">
                             <div class="col-12">
-                                <h5 class="text-primary">
-                                     Контактная информация
-                                </h5>
+                                <h5 class="text-primary">Контактная информация</h5>
                                 <hr>
                             </div>
                         </div>
@@ -58,32 +56,30 @@
                             <div class="col-md-6 mb-3">
                                 <label for="email" class="form-label">Email *</label>
                                 <input type="email" class="form-control" id="email" name="email" required
-                                       placeholder="ivanov@example.com">
+                                       placeholder="ivanov@university.ru">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="phone" class="form-label">Телефон *</label>
                                 <input type="tel" class="form-control" id="phone" name="phone" required
-                                       placeholder="+79991234567">
+                                       placeholder="+7(999)123-45-67">
                             </div>
                         </div>
 
                         <div class="row mb-4">
                             <div class="col-12">
-                                <h5 class="text-primary">
-                                     Учетные данные
-                                </h5>
+                                <h5 class="text-primary">Учетные данные и роль</h5>
                                 <hr>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label for="login" class="form-label">Логин *</label>
                                 <input type="text" class="form-control" id="login" name="login" required
-                                       placeholder="Придумайте логин">
-                                <div class="form-text">Логин должен быть уникальным</div>
+                                       placeholder="Уникальный логин">
+                                <div class="form-text">Должен быть уникальным</div>
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label for="role" class="form-label">Роль *</label>
                                 <select class="form-control" id="role" name="role" required>
                                     <option value="">Выберите роль</option>
@@ -97,8 +93,7 @@
                             <div class="col-md-6 mb-3">
                                 <label for="password" class="form-label">Пароль *</label>
                                 <input type="password" class="form-control" id="password" name="password" required
-                                       placeholder="Придумайте пароль">
-                                <div class="form-text">Минимум 6 символов</div>
+                                       placeholder="Минимум 6 символов">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="confirmPassword" class="form-label">Подтверждение пароля *</label>
@@ -107,12 +102,11 @@
                             </div>
                         </div>
 
+                        <!-- Поля для студентов -->
                         <div id="studentFields" style="display: none;">
                             <div class="row mb-4">
                                 <div class="col-12">
-                                    <h5 class="text-info">
-                                         Информация для студентов
-                                    </h5>
+                                    <h5 class="text-info">Информация для студента</h5>
                                     <hr>
                                 </div>
                             </div>
@@ -120,9 +114,12 @@
                                 <div class="col-md-6 mb-3">
                                     <label for="groupId" class="form-label">Группа</label>
                                     <select class="form-control" id="groupId" name="groupId">
-                                        <option value="">Выберите группу (опционально)</option>
+                                        <option value="">Выберите группу</option>
+                                        @foreach (var group in ViewBag.Groups)
+                                        {
+                                            <option value="@group.IdGroup">Группа @group.NumberGroup (@group.Departament?.Name)</option>
+                                        }
                                     </select>
-                                    <div class="form-text">Можно выбрать позже в личном кабинете</div>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="dateBirthday" class="form-label">Дата рождения</label>
@@ -131,12 +128,11 @@
                             </div>
                         </div>
 
+                        <!-- Поля для преподавателей -->
                         <div id="teacherFields" style="display: none;">
                             <div class="row mb-4">
                                 <div class="col-12">
-                                    <h5 class="text-warning">
-                                         Информация для преподавателей
-                                    </h5>
+                                    <h5 class="text-warning">Информация для преподавателя</h5>
                                     <hr>
                                 </div>
                             </div>
@@ -144,39 +140,35 @@
                                 <div class="col-md-6 mb-3">
                                     <label for="departamentId" class="form-label">Кафедра</label>
                                     <select class="form-control" id="departamentId" name="departamentId">
-                                        <option value="">Выберите кафедру (опционально)</option>
+                                        <option value="">Выберите кафедру</option>
+                                        @foreach (var departament in ViewBag.Departaments)
+                                        {
+                                            <option value="@departament.IdDepartament">@departament.Name</option>
+                                        }
                                     </select>
-                                    <div class="form-text">Можно выбрать позже в личном кабинете</div>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="academicDegree" class="form-label">Ученая степень</label>
-                                    <input type="text" class="form-control" id="academicDegree" name="academicDegree"
-                                           placeholder="Кандидат наук, Доцент и т.д.">
+                                    <label for="disciplines" class="form-label">Дисциплины (опционально)</label>
+                                    <select class="form-control" id="disciplineIds" name="disciplineIds" multiple>
+                                        @foreach (var discipline in ViewBag.Disciplines)
+                                        {
+                                            <option value="@discipline.IdDiscipline">@discipline.Name</option>
+                                        }
+                                    </select>
+                                    <div class="form-text">Удерживайте Ctrl для выбора нескольких дисциплин</div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="d-grid gap-2 mt-4">
                             <button type="submit" class="btn btn-success btn-lg">
-                                 Зарегистрироваться
+                                Зарегистрировать пользователя
                             </button>
-                            <a href="@Url.Action("Login", "Account")" class="btn btn-outline-secondary">
-                                Уже есть аккаунт? Войти
+                            <a href="@Url.Action("AdminDashboard", "Home")" class="btn btn-outline-secondary">
+                                Назад в панель администратора
                             </a>
                         </div>
                     </form>
-
-                    <div class="mt-4">
-                        <div class="alert alert-info">
-                            <h6> Информация о регистрации:</h6>
-                            <ul class="mb-0 small">
-                                <li>Все поля, отмеченные *, обязательны для заполнения</li>
-                                <li>После регистрации вы автоматически войдете в систему</li>
-                                <li>Вы сможете дополнить информацию в личном кабинете</li>
-                                <li>Группу и кафедру можно будет выбрать позже</li>
-                            </ul>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -186,29 +178,6 @@
 @section Scripts {
     <script>
         $(document).ready(function() {
-            const groups = [
-                { idGroup: 1, numberGroup: 101, departamentName: "Информатика и ВТ" },
-                { idGroup: 2, numberGroup: 102, departamentName: "Информатика и ВТ" },
-                { idGroup: 3, numberGroup: 201, departamentName: "Прикладная математика" },
-                { idGroup: 4, numberGroup: 202, departamentName: "Прикладная математика" },
-                { idGroup: 5, numberGroup: 301, departamentName: "Общая физика" },
-                { idGroup: 6, numberGroup: 302, departamentName: "Общая физика" },
-                { idGroup: 7, numberGroup: 401, departamentName: "Высшая математика" },
-                { idGroup: 8, numberGroup: 501, departamentName: "Экономика" },
-                { idGroup: 9, numberGroup: 601, departamentName: "Социология" },
-                { idGroup: 10, numberGroup: 701, departamentName: "Иностранные языки" }
-            ];
-
-            const departaments = [
-                { idDepartament: 1, name: "Информатика и ВТ" },
-                { idDepartament: 2, name: "Прикладная математика" },
-                { idDepartament: 3, name: "Общая физика" },
-                { idDepartament: 4, name: "Высшая математика" },
-                { idDepartament: 5, name: "Экономика" },
-                { idDepartament: 6, name: "Социология" },
-                { idDepartament: 7, name: "Иностранные языки" }
-            ];
-
             $('#role').change(function() {
                 const role = $(this).val();
                 $('#studentFields').hide();
@@ -216,46 +185,8 @@
 
                 if (role === 'Student') {
                     $('#studentFields').show();
-                    loadGroups();
                 } else if (role === 'Teacher') {
                     $('#teacherFields').show();
-                    loadDepartaments();
-                }
-            });
-
-            function loadGroups() {
-                const groupSelect = $('#groupId');
-                groupSelect.empty();
-                groupSelect.append('<option value="">Выберите группу (опционально)</option>');
-
-                groups.forEach(function(group) {
-                    groupSelect.append(`<option value="${group.idGroup}">Группа ${group.numberGroup} (${group.departamentName})</option>`);
-                });
-            }
-
-            function loadDepartaments() {
-                const departamentSelect = $('#departamentId');
-                departamentSelect.empty();
-                departamentSelect.append('<option value="">Выберите кафедру (опционально)</option>');
-
-                departaments.forEach(function(departament) {
-                    departamentSelect.append(`<option value="${departament.idDepartament}">${departament.name}</option>`);
-                });
-            }
-
-            $('#password').on('input', function() {
-                if ($(this).val().length < 6) {
-                    $(this).addClass('is-invalid');
-                } else {
-                    $(this).removeClass('is-invalid');
-                }
-            });
-
-            $('#confirmPassword').on('input', function() {
-                if ($(this).val() !== $('#password').val()) {
-                    $(this).addClass('is-invalid');
-                } else {
-                    $(this).removeClass('is-invalid');
                 }
             });
 
@@ -290,10 +221,6 @@
             $('input, select').on('input change', function() {
                 $(this).removeClass('is-invalid');
             });
-
-            setTimeout(function() {
-                $('.alert').fadeOut('slow');
-            }, 5000);
         });
     </script>
 }

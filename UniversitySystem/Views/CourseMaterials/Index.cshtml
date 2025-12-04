@@ -1,0 +1,83 @@
+﻿@model IEnumerable<UniversitySystem.Models.CourseMaterial>
+
+@{
+    ViewData["Title"] = "Учебные материалы";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card bg-info text-white mb-4">
+                <div class="card-body">
+                    <h1 class="card-title">Учебные материалы</h1>
+                    <p class="card-text">Доступные учебные материалы по вашим дисциплинам</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Фильтр по дисциплинам</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        <a href="@Url.Action("Index")" class="list-group-item list-group-item-action @(ViewBag.SelectedDisciplineId == null ? "active" : "")">
+                            Все дисциплины
+                        </a>
+                        @foreach (var discipline in ViewBag.Disciplines)
+                        {
+                            <a href="@Url.Action("Index", new { disciplineId = discipline.IdDiscipline })"
+                               class="list-group-item list-group-item-action @(ViewBag.SelectedDisciplineId == discipline.IdDiscipline ? "active" : "")">
+                                @discipline.Name
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            @if (Model.Any())
+            {
+                <div class="row">
+                    @foreach (var material in Model)
+                    {
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <h5 class="mb-0">@material.Title</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text">@material.Description</p>
+                                    <p class="card-text">
+                                        <small class="text-muted">
+                                            <strong>Дисциплина:</strong> @material.Discipline?.Name<br>
+                                            <strong>Преподаватель:</strong> @material.Teacher?.SecondName @material.Teacher?.Name<br>
+                                            <strong>Дата добавления:</strong> @material.CreatedDate.ToString("dd.MM.yyyy")
+                                        </small>
+                                    </p>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="@Url.Action("Details", new { id = material.IdMaterial })"
+                                       class="btn btn-info btn-sm">
+                                        <i class="fas fa-eye"></i> Подробнее
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning">
+                    <h5>Материалы не найдены</h5>
+                    <p>Для вашей группы пока нет учебных материалов</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

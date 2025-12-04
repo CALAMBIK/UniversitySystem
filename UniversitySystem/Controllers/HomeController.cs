@@ -19,11 +19,17 @@ namespace UniversitySystem.Controllers
 
         public async Task<IActionResult> Index()
         {
+            if (HttpContext.Session.GetString("UserId") == null)
+            {
+                return View("GuestIndex");
+            }
+
             ViewBag.StudentsCount = await _context.Students.CountAsync();
             ViewBag.TeacherCount = await _context.Teachers.CountAsync();
             ViewBag.GroupsCount = await _context.StudentGroups.CountAsync();
             ViewBag.DepartamentsCount = await _context.Departaments.CountAsync();
             ViewBag.DisciplineCount = await _context.Disciplines.CountAsync();
+            ViewBag.MaterialsCount = await _context.CourseMaterials.CountAsync();
 
             ViewBag.LatestNews = await _context.News
                 .Where(n => n.IsPublished)
@@ -47,7 +53,7 @@ namespace UniversitySystem.Controllers
             {
                 return RedirectToAction("Profile", "Account");
             }
-            
+
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
@@ -60,7 +66,7 @@ namespace UniversitySystem.Controllers
             if (user != null)
             {
                 TempData["SuccessMessage"] = $"Добро пожаловать, {_authService.GetUserName()}!";
-                
+
                 if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                 {
                     return Redirect(returnUrl);
@@ -82,12 +88,10 @@ namespace UniversitySystem.Controllers
             ViewBag.TeachersCount = _context.Teachers.Count();
             ViewBag.GroupsCount = _context.StudentGroups.Count();
             ViewBag.DepartamentsCount = _context.Departaments.Count();
+            ViewBag.MaterialsCount = _context.CourseMaterials.Count();
 
             ViewBag.NewsCount = _context.News.Count();
             ViewBag.PublishedNewsCount = _context.News.Count(n => n.IsPublished);
-
-            ViewBag.PendingRequestsCount = _context.MaterialRequests.Count(r => r.Status == "Pending");
-            ViewBag.TotalRequestsCount = _context.MaterialRequests.Count();
 
             ViewBag.UserName = _authService.GetUserName();
             ViewBag.UserRole = _authService.GetUserRole();
@@ -105,6 +109,29 @@ namespace UniversitySystem.Controllers
                 .Include(u => u.Teacher)
                 .ThenInclude(t => t.Departament)
                 .FirstOrDefaultAsync(u => u.IdUser == userId);
+
+            if (user?.Teacher != null)
+            {
+                // Получаем статистику материалов преподавателя
+                ViewBag.MaterialsCount = await _context.CourseMaterials
+                    .CountAsync(cm => cm.IdTeacher == user.Teacher.IdTeacher);
+
+                // Получаем дисциплины преподавателя
+                ViewBag.Disciplines = await _context.TeacherDisciplines
+                    .Include(td => td.Discipline)
+                    .Include(td => td.Group)
+                    .Where(td => td.IdTeacher == user.Teacher.IdTeacher)
+                    .ToListAsync();
+
+                // Получаем последние материалы
+                ViewBag.RecentMaterials = await _context.CourseMaterials
+                    .Include(cm => cm.Group)
+                    .Include(cm => cm.Discipline)
+                    .Where(cm => cm.IdTeacher == user.Teacher.IdTeacher)
+                    .OrderByDescending(cm => cm.CreatedDate)
+                    .Take(5)
+                    .ToListAsync();
+            }
 
             ViewBag.UserName = _authService.GetUserName();
             ViewBag.UserRole = _authService.GetUserRole();
@@ -129,6 +156,23 @@ namespace UniversitySystem.Controllers
             {
                 ViewBag.GroupStudentsCount = await _context.Students
                     .CountAsync(s => s.IdGroup == user.Student.IdGroup);
+
+                // Получаем материалы для студента
+                ViewBag.RecentMaterials = await _context.CourseMaterials
+                    .Include(cm => cm.Teacher)
+                    .Include(cm => cm.Discipline)
+                    .Where(cm => cm.IdGroup == user.Student.IdGroup)
+                    .OrderByDescending(cm => cm.CreatedDate)
+                    .Take(5)
+                    .ToListAsync();
+
+                // Получаем преподавателей студента
+                ViewBag.Teachers = await _context.CourseMaterials
+                    .Include(cm => cm.Teacher)
+                    .Where(cm => cm.IdGroup == user.Student.IdGroup)
+                    .Select(cm => cm.Teacher)
+                    .Distinct()
+                    .ToListAsync();
             }
 
             ViewBag.UserName = _authService.GetUserName();

@@ -79,14 +79,11 @@
                             <a href="@Url.Action("TeacherDashboard", "Home")" class="btn btn-outline-success">
                                 Панель преподавателя
                             </a>
-                            <a href="@Url.Action("Index", "Students")" class="btn btn-outline-primary">
-                                 Просмотр студентов
-                            </a>
                         }
                         else if (ViewBag.UserRole == "Student")
                         {
                             <a href="@Url.Action("StudentDashboard", "Home")" class="btn btn-outline-info">
-                                 Учебный dashboard
+                                 Успеваемость
                             </a>
                         }
 
@@ -132,26 +129,4 @@
             </div>
         </div>
     }
-
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header bg-secondary text-white">
-                    <h5 class="mb-0"> Системная информация</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <p><strong>Последний вход:</strong> @DateTime.Now.ToString("dd.MM.yyyy HH:mm")</p>
-                            <p><strong>IP-адрес:</strong> @Context.Connection.RemoteIpAddress</p>
-                        </div>
-                        <div class="col-md-6">
-                            <p><strong>Статус системы:</strong> <span class="badge bg-success">Активна</span></p>
-                            <p><strong>Версия:</strong> 1.0.0</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>

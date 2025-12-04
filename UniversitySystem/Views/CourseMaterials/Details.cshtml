@@ -1,0 +1,101 @@
+﻿@model UniversitySystem.Models.CourseMaterial
+
+@{
+    ViewData["Title"] = "Детали материала";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card bg-info text-white mb-4">
+                <div class="card-body">
+                    <h1 class="card-title">@Model.Title</h1>
+                    <p class="card-text">@Model.Discipline?.Name - Группа @Model.Group?.NumberGroup</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Содержание материала</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">@Model.Description</p>
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">
+                        <strong>Дата создания:</strong> @Model.CreatedDate.ToString("dd.MM.yyyy HH:mm")
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Информация о материале</h5>
+                </div>
+                <div class="card-body">
+                    <p>
+                        <strong>Преподаватель:</strong><br>
+                        @Model.Teacher?.SecondName @Model.Teacher?.Name @Model.Teacher?.Patronymic
+                    </p>
+                    <p>
+                        <strong>Кафедра:</strong><br>
+                        @Model.Teacher?.Departament?.Name
+                    </p>
+                    <p>
+                        <strong>Группа:</strong><br>
+                        <span class="badge bg-primary">Группа @Model.Group?.NumberGroup</span>
+                    </p>
+                    <p>
+                        <strong>Дисциплина:</strong><br>
+                        @Model.Discipline?.Name
+                    </p>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Действия</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        @if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
+                        {
+                            <form method="post" action="@Url.Action("Delete", new { id = Model.IdMaterial })"
+                                  onsubmit="return confirm('Удалить этот материал?')">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fas fa-trash me-2"></i>Удалить материал
+                                </button>
+                            </form>
+                        }
+
+                        @if (User.IsInRole("Student"))
+                        {
+                            <a href="@Url.Action("Index")" class="btn btn-outline-primary">
+                                <i class="fas fa-arrow-left me-2"></i>Назад к материалам
+                            </a>
+                        }
+                        else if (User.IsInRole("Teacher"))
+                        {
+                            <a href="@Url.Action("TeacherMaterials")" class="btn btn-outline-primary">
+                                <i class="fas fa-arrow-left me-2"></i>Мои материалы
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("Index", "Home")" class="btn btn-outline-primary">
+                                <i class="fas fa-arrow-left me-2"></i>На главную
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
